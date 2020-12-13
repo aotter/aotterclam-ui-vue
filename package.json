@@ -33,6 +33,12 @@
     "vue-template-compiler": "^2.6.11"
   },
   "keywords": [],
-  "author": "phsu",
-  "license": "MIT"
+  "author": "guyspy",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "url": "git@github.com:aotter/aotterclam-ui-vue.git"
+  }
 }
