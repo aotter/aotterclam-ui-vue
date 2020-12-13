@@ -21,7 +21,7 @@ interface IOptionsClamFormField extends IBaseClamFormField {
 }
 
 interface IDefaultClamFormField extends IBaseClamFormField {
-  formTagType: 'INPUT' | 'DATE' | 'SWITCH' | 'DATETIME' | 'TAGS' | 'TEXTAREA'
+  formTagType: 'INPUT' | 'DATE' | 'SWITCH' | 'TAGS' | 'TEXTAREA'
 }
 
 interface IImageClamFormField extends IBaseClamFormField {

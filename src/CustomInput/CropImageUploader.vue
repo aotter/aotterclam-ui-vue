@@ -38,14 +38,14 @@
       ok-title="確認裁切上傳"
       @hide="reset"
     >
-      <div class="d-block" v-loading="uploading">
+      <b-overlay :show="uploading" rounded="sm">
         <img
           ref="image"
           :src="url"
           crossorigin
           style="max-width: 100%; max-height: 350px"
         />
-      </div>
+      </b-overlay>
       <template slot="modal-footer">
         <b-button @click="cropAndUpload" :disabled="uploading"
           >確認裁切上傳</b-button
@@ -59,10 +59,14 @@ import Vue from "vue";
 import Cropper from "cropperjs";
 require("cropperjs/dist/cropper.min.css");
 const FileAPI = require("fileapi");
-import { BModal, BButton } from "bootstrap-vue";
+import { BModal, BButton, BOverlay } from "bootstrap-vue";
 
 export default Vue.extend({
-  components: { BModal, BButton },
+  components: {
+    BModal,
+    BButton,
+    BOverlay,
+  },
   props: {
     value: {
       type: String,
