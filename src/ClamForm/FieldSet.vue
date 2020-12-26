@@ -2,41 +2,30 @@
   <div>
     <template v-for="field in fields">
       <template v-if="field.fields && field.fields.length > 0">
-        <b-form-group
-          :key="field.name"
-          :label="field.label"
-          label-for=""
-          :label-cols="labelCols"
-          :label-cols-sm="labelColsSm"
-          :label-cols-md="labelColsMd"
-          :label-cols-lg="labelColsLg"
-          :label-cols-xl="labelColsXl"
-          :label-align="labelAlign"
-          :label-align-sm="labelAlignSm"
-          :label-align-md="labelAlignMd"
-          :label-align-lg="labelAlignLg"
-          :label-align-xl="labelAlignXl"
-          :description="field.description"
-        >
-          <template v-if="field.contentType === 'Object'">
-            <FieldSetNested
-              v-bind="$props"
-              :key="field.name"
-              :field="field"
-              :value="getFormDataValue(field)"
-              @input="onInput($event, field.name)"
-            />
-          </template>
-          <template v-else-if="field.contentType === 'Array'">
-            <FieldSetArray
-              v-bind="$props"
-              :key="field.name"
-              :field="field"
-              :value="getFormDataValue(field)"
-              @input="onInput($event, field.name)"
-            />
-          </template>
-        </b-form-group>
+        <div class="form-group row" :key="field.name">
+          <label for="" class="col-sm-2 col-form-label text-right" v-text="field.label"></label>
+          <div class="col-sm-10">
+            <template v-if="field.contentType === 'Object'">
+              <FieldSetNested
+                v-bind="$props"
+                :key="field.name"
+                :field="field"
+                :value="getFormDataValue(field)"
+                @input="onInput($event, field.name)"
+              />
+            </template>
+            <template v-else-if="field.contentType === 'Array'">
+              <FieldSetArray
+                v-bind="$props"
+                :key="field.name"
+                :field="field"
+                :value="getFormDataValue(field)"
+                @input="onInput($event, field.name)"
+              />
+            </template>
+            <small class="form-text text-muted" v-text="field.description"></small>
+          </div>
+        </div>
       </template>
       <template v-else>
         <component
@@ -66,11 +55,8 @@ import ClamForm_SWITCH from "./ClamFormSwitch.vue";
 import ClamForm_TAGS from "./ClamFormTag.vue";
 import ClamForm_IMAGE from "./ClamFormCropImageUploader.vue";
 
-import { BFormGroup } from "bootstrap-vue";
-
 export default Vue.extend({
   components: {
-    BFormGroup,
     FieldSetNested,
     FieldSetArray,
     ClamForm_INPUT,
@@ -82,20 +68,14 @@ export default Vue.extend({
     ClamForm_TAGS,
     ClamForm_IMAGE,
   },
-  props: [
-    "value",
-    "fields",
-    "labelCols",
-    "labelColsSm",
-    "labelColsMd",
-    "labelColsLg",
-    "labelColsXl",
-    "labelAlign",
-    "labelAlignSm",
-    "labelAlignMd",
-    "labelAlignLg",
-    "labelAlignXl",
-  ],
+  props:{
+    value: {
+      type: Object,
+    },
+    fields: {
+      type: Array as () => IClamFormField[],
+    },
+  },
   methods: {
     determineShow(field: IClamFormField) {
       return field.showIf ? field.showIf(this.value) : true;

@@ -1,55 +1,34 @@
 <template>
   <ValidationProvider :name="_label" :rules="_rules" v-slot="validationContext">
-    <b-form-group
-      label-for=""
-      :label-cols="labelCols"
-      :label-cols-sm="labelColsSm"
-      :label-cols-md="labelColsMd"
-      :label-cols-lg="labelColsLg"
-      :label-cols-xl="labelColsXl"
-      :label-align="labelAlign"
-      :label-align-sm="labelAlignSm"
-      :label-align-md="labelAlignMd"
-      :label-align-lg="labelAlignLg"
-      :label-align-xl="labelAlignXl"
-      :description="_description"
-    >
-      <template v-slot:label>
-        <span v-if="required" class="ml-1 text-danger">*</span> {{ _label }}
-      </template>
-      <slot v-bind="validationContext"></slot>
-      <b-form-invalid-feedback>{{
-        validationContext.errors[0]
-      }}</b-form-invalid-feedback>
-    </b-form-group>
+    <div class="form-group row">
+      <label for="" class="col-sm-2 col-form-label text-right"><span v-if="required" class="ml-1 text-danger">*</span> {{ _label }}</label>
+      <div class="col-sm-10">
+        <slot v-bind="validationContext"></slot>
+        <small class="form-text text-muted" v-text="_description"></small>
+        <div class="invalid-feedback" v-text="validationContext.errors[0]"></div>
+      </div>
+    </div>
   </ValidationProvider>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { IClamFormField } from "../types";
-import { BFormGroup, BFormInvalidFeedback } from "bootstrap-vue";
 
 export default Vue.extend({
-  components: {
-    BFormGroup,
-    BFormInvalidFeedback,
+  props:{
+    field:{
+      type:Object as () => IClamFormField
+    },
+    label:{
+      type:String
+    },
+    rules:{
+      type:String
+    },
+    description:{
+      type:String
+    }
   },
-  props: [
-    "field",
-    "label",
-    "rules",
-    "description",
-    "labelCols",
-    "labelColsSm",
-    "labelColsMd",
-    "labelColsLg",
-    "labelColsXl",
-    "labelAlign",
-    "labelAlignSm",
-    "labelAlignMd",
-    "labelAlignLg",
-    "labelAlignXl",
-  ],
   computed: {
     _label(): string {
       const field = this.field as IClamFormField;

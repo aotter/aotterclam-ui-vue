@@ -3,6 +3,7 @@
     <draggable
       :list="value"
       ghost-class="ghost"
+      handle=".handle"
       @start="dragging = true"
       @end="dragging = false"
     >
@@ -14,6 +15,7 @@
         <FieldSetNested
           @remove="remove(index)"
           v-bind="$props"
+          :dragging="dragging"
           :show-header="true"
           :header-title="`${field.label} #${index + 1}`"
           :field="field"
@@ -22,16 +24,14 @@
         />
       </div>
     </draggable>
-    <b-row>
-      <b-col>
-        <b-button variant="primary" size="sm" @click="add">
-          新增{{ field.label }}
-        </b-button>
-      </b-col>
-      <b-col class="text-right">
+    <div class="row">
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-sm" @click="add">新增{{ field.label }}</button>
+      </div>
+      <div class="col text-right">
         <small v-if="value.length > 1">可用拖曳的方式調整順序</small>
-      </b-col>
-    </b-row>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -39,30 +39,20 @@ import Vue from "vue";
 import { IClamFormField } from "../types";
 import draggable from "vuedraggable";
 import FieldSetNested from "./FieldSetNested.vue";
-import { BRow, BCol, BButton } from "bootstrap-vue";
 
 export default Vue.extend({
   components: {
     draggable,
-    BRow,
-    BCol,
-    BButton,
     FieldSetNested,
   },
-  props: [
-    "value", // will be an Array
-    "field",
-    "labelCols",
-    "labelColsSm",
-    "labelColsMd",
-    "labelColsLg",
-    "labelColsXl",
-    "labelAlign",
-    "labelAlignSm",
-    "labelAlignMd",
-    "labelAlignLg",
-    "labelAlignXl",
-  ],
+  props:{
+    value:{
+      type: Array
+    },
+    field:{
+      type:Object as () => IClamFormField
+    }
+  },
   data() {
     return {
       dragging: false,

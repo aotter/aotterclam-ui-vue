@@ -54,11 +54,11 @@
     </b-modal>
   </div>
 </template>
-<script lang="ts">
+<script lang="js">
 import Vue from "vue";
 import Cropper from "cropperjs";
-require("cropperjs/dist/cropper.min.css");
-const FileAPI = require("fileapi");
+//import "cropperjs/dist/cropper.min.css";
+import * as FileAPI from "fileapi";
 import { BModal, BButton, BOverlay } from "bootstrap-vue";
 
 export default Vue.extend({
@@ -107,17 +107,17 @@ export default Vue.extend({
 
   data() {
     return {
-      cropper: {} as Cropper,
-      url: null as string | null,
+      cropper: {} ,
+      url: null ,
       showModal: false,
-      fileName: null as string | null,
-      fileType: null as string | null,
+      fileName: null ,
+      fileType: null,
       uploading: false,
     };
   },
 
   computed: {
-    imgSrc(): string {
+    imgSrc() {
       return (
         this.value ||
         "https://via.placeholder.com/" +
@@ -130,7 +130,7 @@ export default Vue.extend({
           this.height
       );
     },
-    helpText(): string {
+    helpText() {
       return `${this.width} x ${this.height} ${this.acceptImageType
         .split(",")
         .map((s) => s.replace("image/", "").trim())
@@ -140,9 +140,9 @@ export default Vue.extend({
 
   methods: {
     triggerFileInput() {
-      (this.$refs.fileInput as any).click();
+      this.$refs.fileInput.click();
     },
-    setImage(e: any) {
+    setImage(e) {
       const file = e.target.files[0];
       if (!file.type.includes("image/")) {
         alert("Please select an image file");
@@ -153,7 +153,7 @@ export default Vue.extend({
       this.url = URL.createObjectURL(file);
       this.showModal = true;
       this.$nextTick(() => {
-        this.cropper = new Cropper(this.$refs.image as HTMLImageElement, {
+        this.cropper = new Cropper(this.$refs.image, {
           viewMode: 2,
           guides: false,
           autoCropArea: 1,
@@ -164,27 +164,27 @@ export default Vue.extend({
     },
     cropAndUpload() {
       this.cropper.getCroppedCanvas().toBlob(
-        (blob: Blob | null) => {
+        (blob) => {
           this.resizeAndUpload(blob);
         },
-        this.fileType!,
+        this.fileType,
         1
       );
     },
-    resizeAndUpload(file: Blob | null) {
+    resizeAndUpload(file) {
       FileAPI.Image(file)
         .resize(this.width, this.height)
-        .get((error: any, canvasElement: HTMLCanvasElement) => {
+        .get((error, canvasElement) => {
           canvasElement.toBlob(
-            (blob: Blob | null) => {
+            (blob) => {
               this.upload(blob);
             },
-            this.fileType!,
+            this.fileType,
             0.9
           );
         });
     },
-    async upload(file: Blob | null) {
+    async upload(file) {
       this.uploading = true;
       if (file == null) {
         alert("error, no file");
@@ -205,7 +205,7 @@ export default Vue.extend({
       this.url = null;
       this.fileName = null;
       this.fileType = null;
-      (this.$refs.fileInput as any).value = null;
+      (this.$refs.fileInput).value = null;
     },
   },
 });

@@ -1,25 +1,22 @@
 <template>
   <FormGroup v-bind="$props" v-slot="validationContext">
-    <b-form-input
-      id=""
+    <input 
+      :class="['form-control', getValidationClass(validationContext)]" 
       :type="_type"
       :value="value"
-      @input="onInput"
-      :state="getValidationState(validationContext)"
+      @input="onInput($event.target.value)"
       :placeholder="_placeholder"
-    ></b-form-input>
+    >
   </FormGroup>
 </template>
 <script lang="ts">
 import { IClamFormField } from "../types";
 import Vue from "vue";
 import FormGroup from "./FormGroup.vue";
-import { BFormInput } from "bootstrap-vue";
 
 export default Vue.extend({
   components: {
     FormGroup,
-    BFormInput,
   },
   props: [
     "value",
@@ -53,7 +50,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    getValidationState({
+    getValidationClass({
       dirty,
       validated,
       valid,
@@ -62,9 +59,10 @@ export default Vue.extend({
       validated: boolean;
       valid: boolean;
     }) {
-      return dirty || validated ? valid : null;
+      return dirty || validated ? valid ? 'is-valid' : 'is-invalid' : '';
     },
     onInput(value: any) {
+      console.log(value)
       const v = this._type === "number" ? new Number(value).valueOf() : value;
       this.$emit("input", v);
     },
