@@ -1,58 +1,72 @@
 <template>
   <FormGroup v-bind="$props" v-slot="validationContext">
+    <div role="group" :id="field.name">
+      <div
+        class="form-check form-check-inline"
+        v-for="(option, index) in field.options"
+        :key="index"
+      >
+        <input
+          type="checkbox"
+          :class="['form-check-input', getValidationClass(validationContext)]"
+          :value="option.value"
+          :id="`${field.name}_${index}`"
+          v-model="localValue"
+        />
+
+        <label
+          class="form-check-label"
+          :for="`${field.name}_${index}`"
+          v-text="option.text"
+        ></label>
+      </div>
+    </div>
+  </FormGroup>
+  <!-- <FormGroup v-bind="$props" v-slot="validationContext">
     <b-form-checkbox-group
       :checked="value"
       @input="onInput"
       :options="_options"
       :state="getValidationState(validationContext)"
     ></b-form-checkbox-group>
-  </FormGroup>
+  </FormGroup> -->
 </template>
 <script lang="ts">
-import { IClamFormField } from "../types";
+import { IClamFormField, IOptionsClamFormField } from "../types";
 import Vue from "vue";
 import FormGroup from "./FormGroup.vue";
-import { BFormCheckboxGroup } from "bootstrap-vue";
 
 export default Vue.extend({
   components: {
     FormGroup,
-    BFormCheckboxGroup,
   },
-  // TODO: check value should be an array, type should be text or number
-  props: [
-    "value",
-    "field",
-    "type",
-    "options",
-    "label",
-    "rules",
-    "description",
-    "labelCols",
-    "labelColsSm",
-    "labelColsMd",
-    "labelColsLg",
-    "labelColsXl",
-    "labelAlign",
-    "labelAlignSm",
-    "labelAlignMd",
-    "labelAlignLg",
-    "labelAlignXl",
-  ],
-  computed: {
-    _type() {
-      return this.field
-        ? this.field?.contentType === "string"
-          ? "text"
-          : "number"
-        : this.type || "text";
+  props: {
+    value: Array,
+    field: {
+      type: Object as () => IOptionsClamFormField,
+      required: true,
+      validator: (value: IOptionsClamFormField) => {
+        return value.formTagType === "CHECKBOXES";
+      },
     },
-    _options() {
-      return this.field?.options || this.options;
+  },
+  data() {
+    return {
+      localValue: this.value,
+    };
+  },
+  watch: {
+    localValue(newValue, oldValue) {
+      const vs = newValue.map((v: any) => {
+        return this.field.contentType === "number"
+          ? new Number(v).valueOf()
+          : v;
+      });
+      this.$emit("input", vs);
     },
   },
   methods: {
-    getValidationState({
+    getValidationClass({
       dirty,
       validated,
       valid,
@@ -61,14 +75,7 @@ export default Vue.extend({
       validated: boolean;
       valid: boolean;
     }) {
-      return dirty || validated ? valid : null;
-    },
-    onInput(value: any[]) {
-      const v =
-        this.type === "number"
-          ? value.map((v) => new Number(v).valueOf())
-          : value;
-      this.$emit("input", v);
+      return dirty || validated ? (valid ? "is-valid" : "is-invalid") : "";
     },
   },
 });

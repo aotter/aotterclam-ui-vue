@@ -1,6 +1,6 @@
 <template>
   <FormGroup v-bind="$props" v-slot="validationContext">
-    <div role="radiogroup" tabindex="-1" :id="field.name">
+    <div role="radiogroup" :id="field.name">
       <div
         class="custom-control custom-radio custom-control-inline"
         v-for="(option, index) in field.options"
