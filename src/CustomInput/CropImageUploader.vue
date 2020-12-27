@@ -139,6 +139,9 @@ export default Vue.extend({
       type: Number,
       default: 300,
     },
+    uploadFunction: {
+      type: Function
+    }
   },
 
   data() {
@@ -260,19 +263,15 @@ export default Vue.extend({
         alert("error, no file");
         return;
       }
-      console.log('upload', file)
-      // todo
-      //   const formData = new FormData()
-      //   formData.append('file', file, this.fileName!)
-      //   const {
-      //     data: { url },
-      //   } = await HttpClient.post('api/media/upload', formData)
+      console.log('upload', file, 'uploadFunction', this.uploadFunction)
+      const formData = new FormData()
+      formData.append('file', file, this.fileName)
+      const url = await this.uploadFunction(formData)
       this.busy = false;
-      //this.$emit('input', url)
+      this.$emit('input', url)
       this.showModal = false;
     },
     reset() {
-      //this.showModal = false;
       this.url = null;
       this.fileName = null;
       this.fileType = null;

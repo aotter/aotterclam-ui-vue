@@ -51,6 +51,7 @@ export interface IImageClamFormField extends IBaseClamFormField {
     height: number
     displayWidth: string
     acceptImageType: string
+    uploadFunction: (form: FormData) => Promise<string>
   }
 }
 
