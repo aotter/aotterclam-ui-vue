@@ -3,7 +3,11 @@
     <template v-for="field in fields">
       <template v-if="field.fields && field.fields.length > 0">
         <div class="form-group row" :key="field.name">
-          <label for="" class="col-sm-2 col-form-label text-right" v-text="field.label"></label>
+          <label
+            for=""
+            class="col-sm-2 col-form-label text-right"
+            v-text="field.label"
+          ></label>
           <div class="col-sm-10">
             <template v-if="field.contentType === 'Object'">
               <FieldSetNested
@@ -23,7 +27,10 @@
                 @input="onInput($event, field.name)"
               />
             </template>
-            <small class="form-text text-muted" v-text="field.description"></small>
+            <small
+              class="form-text text-muted"
+              v-text="field.description"
+            ></small>
           </div>
         </div>
       </template>
@@ -34,6 +41,8 @@
           v-if="determineShow(field)"
           v-bind="$props"
           :field="field"
+          :readonly="determineReadonly(field)"
+          :disabled="determineDisabled(field)"
           :value="getFormDataValue(field)"
           @input="onInput($event, field.name)"
         ></component>
@@ -68,7 +77,7 @@ export default Vue.extend({
     ClamForm_TAGS,
     ClamForm_IMAGE,
   },
-  props:{
+  props: {
     value: {
       type: Object,
     },
@@ -79,6 +88,24 @@ export default Vue.extend({
   methods: {
     determineShow(field: IClamFormField) {
       return field.showIf ? field.showIf(this.value) : true;
+    },
+    determineReadonly(field: IClamFormField) {
+      if (field.readonly instanceof Function) {
+        return field.readonly(this.value) || false;
+      } else if (field.readonly != null) {
+        return field.readonly;
+      } else {
+        return false;
+      }
+    },
+    determineDisabled(field: IClamFormField) {
+      if (field.disabled instanceof Function) {
+        return field.disabled(this.value) || false;
+      } else if (field.disabled != null) {
+        return field.disabled;
+      } else {
+        return false;
+      }
     },
     getFormDataValue(field: IClamFormField) {
       const defaultValue =

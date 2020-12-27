@@ -8,8 +8,32 @@ interface IBaseClamFormField {
   description?: string
   placeholder?: string
   showIf?: (data: any) => boolean
+  readonly?: boolean | ((data: any) => boolean)
+  disabled?: boolean | ((data: any) => boolean)
   rules?: string // vee-validate rules
   fields?: IClamFormField[] // nested fields
+}
+
+export interface IDefaultClamFormField extends IBaseClamFormField {
+  formTagType: 'DATE' | 'SWITCH' | 'TAGS' | 'TEXTAREA'
+}
+
+export interface IInputStringClamFormField extends IBaseClamFormField {
+  formTagType: 'INPUT'
+  inputTagType?: 'text' | 'password' | 'email' | 'url' | 'color' | 'tel' | 'search'
+  inputTagAttrs?: {
+    maxlength?: number
+  }
+}
+
+export interface IInputNumberClamFormField extends IBaseClamFormField {
+  formTagType: 'INPUT'
+  inputTagType?: 'number' | 'range'
+  inputTagAttrs?: {
+    min?: number
+    max?: number
+    step?: number
+  }
 }
 
 interface IOptionsClamFormField extends IBaseClamFormField {
@@ -20,9 +44,6 @@ interface IOptionsClamFormField extends IBaseClamFormField {
   }[]
 }
 
-interface IDefaultClamFormField extends IBaseClamFormField {
-  formTagType: 'INPUT' | 'DATE' | 'SWITCH' | 'TAGS' | 'TEXTAREA'
-}
 
 interface IImageClamFormField extends IBaseClamFormField {
   formTagType: 'IMAGE'
@@ -34,4 +55,4 @@ interface IImageClamFormField extends IBaseClamFormField {
   }
 }
 
-export type IClamFormField = IOptionsClamFormField | IDefaultClamFormField | IImageClamFormField
+export type IClamFormField = IOptionsClamFormField | IInputStringClamFormField | IInputNumberClamFormField | IDefaultClamFormField | IImageClamFormField

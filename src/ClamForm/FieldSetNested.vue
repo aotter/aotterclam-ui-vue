@@ -47,6 +47,8 @@
             v-bind="$props"
             :field="childField"
             v-if="determineShow(childField)"
+            :readonly="determineReadonly(childField)"
+            :disabled="determineDisabled(childField)"
             :value="getFormDataValue(childField.name)"
             @input="onInput($event, childField.name)"
           ></component>
@@ -103,6 +105,24 @@ export default Vue.extend({
   methods: {
     determineShow(field: IClamFormField) {
       return field.showIf ? field.showIf(this.value) : true;
+    },
+    determineReadonly(field: IClamFormField) {
+      if (field.readonly instanceof Function) {
+        return field.readonly(this.value) || false;
+      } else if (field.readonly != null) {
+        return field.readonly;
+      } else {
+        return false;
+      }
+    },
+    determineDisabled(field: IClamFormField) {
+      if (field.disabled instanceof Function) {
+        return field.disabled(this.value) || false;
+      } else if (field.disabled != null) {
+        return field.disabled;
+      } else {
+        return false;
+      }
     },
     getFormDataValue(name: string) {
       return this.value ? this.value[name] : null;
