@@ -36,7 +36,7 @@ export interface IInputNumberClamFormField extends IBaseClamFormField {
   }
 }
 
-interface IOptionsClamFormField extends IBaseClamFormField {
+export interface IOptionsClamFormField extends IBaseClamFormField {
   formTagType: 'SELECT' | 'RADIO' | 'CHECKBOXES'
   options?: {
     text: string
@@ -44,8 +44,7 @@ interface IOptionsClamFormField extends IBaseClamFormField {
   }[]
 }
 
-
-interface IImageClamFormField extends IBaseClamFormField {
+export interface IImageClamFormField extends IBaseClamFormField {
   formTagType: 'IMAGE'
   settings: {
     width: number
