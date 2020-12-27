@@ -5,7 +5,7 @@
         <div class="form-group row" :key="field.name">
           <label
             for=""
-            class="col-sm-2 col-form-label text-right"
+            class="col-sm-2 col-form-label text-md-right"
             v-text="field.label"
           ></label>
           <div class="col-sm-10">
@@ -57,11 +57,11 @@ import FieldSetNested from "./FieldSetNested.vue";
 import FieldSetArray from "./FieldSetArray.vue";
 import ClamForm_INPUT from "./ClamFormInput.vue";
 import ClamForm_RADIO from "./ClamFormRadioGroup.vue";
-import ClamForm_DATE from "./ClamFormDatePicker.vue";
+//import ClamForm_DATE from "./ClamFormDatePicker.vue";
 import ClamForm_TEXTAREA from "./ClamFormTextArea.vue";
 import ClamForm_CHECKBOXES from "./ClamFormCheckboxGroup.vue";
-import ClamForm_SWITCH from "./ClamFormSwitch.vue";
-import ClamForm_TAGS from "./ClamFormTag.vue";
+//import ClamForm_SWITCH from "./ClamFormSwitch.vue";
+//import ClamForm_TAGS from "./ClamFormTag.vue";
 import ClamForm_IMAGE from "./ClamFormCropImageUploader.vue";
 
 export default Vue.extend({
@@ -70,11 +70,11 @@ export default Vue.extend({
     FieldSetArray,
     ClamForm_INPUT,
     ClamForm_RADIO,
-    ClamForm_DATE,
+    //ClamForm_DATE,
     ClamForm_TEXTAREA,
     ClamForm_CHECKBOXES,
-    ClamForm_SWITCH,
-    ClamForm_TAGS,
+    //ClamForm_SWITCH,
+    //ClamForm_TAGS,
     ClamForm_IMAGE,
   },
   props: {

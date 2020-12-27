@@ -2,19 +2,20 @@
   <div>
     <div>
       <img
-        v-if="preview"
+        v-if="preview && value"
         style="cursor: pointer"
         @click.prevent="triggerFileInput"
-        :src="imgSrc"
+        :src="value"
         class="img-responsive img-thumbnail"
         :style="{ width: `${displayWidth}` }"
       />
-      <b-button
+      <button
         v-else
+        class="btn btn-outline-secondary"
         @click.prevent="triggerFileInput"
-        variant="outline-secondary"
-        ><i class="el-icon-upload"></i> 上傳
-      </b-button>
+      >
+        <i class="fas fa-upload"></i> 上傳
+      </button>
       <small
         class="text-muted"
         style="cursor: pointer"
@@ -31,14 +32,64 @@
       @change="setImage"
     />
 
-    <b-modal
+    <div v-if="showModal">
+      <div class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">選擇裁切範圍</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true" @click="showModal = false"
+                    >&times;</span
+                  >
+                </button>
+              </div>
+              <div class="modal-body">
+                <img
+                  ref="image"
+                  :src="url"
+                  crossorigin
+                  style="display: block; width: 100%; max-height: 350px"
+                />
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  @click="showModal = false"
+                >
+                  取消
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  @click="cropAndUpload"
+                  :disabled="busy"
+                >
+                  確認裁切上傳
+                  <i v-if="busy" class="fas fa-spinner fa-spin"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <b-modal
       v-model="showModal"
       title="選擇裁切範圍"
       cancel-title="取消"
       ok-title="確認裁切上傳"
       @hide="reset"
     >
-      <b-overlay :show="uploading" rounded="sm">
+      <b-overlay :show="busy" rounded="sm">
         <img
           ref="image"
           :src="url"
@@ -47,58 +98,43 @@
         />
       </b-overlay>
       <template slot="modal-footer">
-        <b-button @click="cropAndUpload" :disabled="uploading"
-          >確認裁切上傳</b-button
-        >
+        <b-button @click="cropAndUpload" :disabled="busy"
+          >確認裁切上傳 <i v-if="busy" class="fas fa-spinner fa-spin"></i>
+        </b-button>
       </template>
-    </b-modal>
+    </b-modal> -->
   </div>
 </template>
 <script lang="js">
 import Vue from "vue";
-import Cropper from "cropperjs";
-//import "cropperjs/dist/cropper.min.css";
-import * as FileAPI from "fileapi";
-import { BModal, BButton, BOverlay } from "bootstrap-vue";
 
 export default Vue.extend({
-  components: {
-    BModal,
-    BButton,
-    BOverlay,
-  },
   props: {
     value: {
       type: String,
       default: null,
     },
-
     btnText: {
       type: String,
       default: "上傳圖片",
     },
-
     preview: {
       type: Boolean,
       default: true,
     },
-
     displayWidth: {
       type: String,
       default: "50%",
     },
-
     // 可接受圖片格式
     acceptImageType: {
       type: String,
       default: "image/png, image/gif, image/jpeg, image/jpg",
     },
-
     width: {
       type: Number,
       default: 300,
     },
-
     height: {
       type: Number,
       default: 300,
@@ -112,24 +148,11 @@ export default Vue.extend({
       showModal: false,
       fileName: null ,
       fileType: null,
-      uploading: false,
+      busy: false,
     };
   },
 
   computed: {
-    imgSrc() {
-      return (
-        this.value ||
-        "https://via.placeholder.com/" +
-          this.width +
-          "x" +
-          this.height +
-          "?text=" +
-          this.width +
-          "x" +
-          this.height
-      );
-    },
     helpText() {
       return `${this.width} x ${this.height} ${this.acceptImageType
         .split(",")
@@ -138,7 +161,54 @@ export default Vue.extend({
     },
   },
 
+  watch:{
+    showModal(newValue, oldValue){
+      if(newValue === false){
+        this.reset()
+      }
+    }
+  },
+
+  async mounted(){
+    // fixme: don't know how to pack
+    await Promise.all([
+      this.loadScript('clam-cropperjs', 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.js'),
+      this.loadCss('clam-cropperjs-css', 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.css'),
+      this.loadScript('clam-fileapi', 'https://cdn.jsdelivr.net/npm/fileapi@2.0.21/dist/FileAPI.min.js'),
+    ])
+  },
+
   methods: {
+    loadScript(id, url) {
+      const existing = document.getElementById(id)
+      if(existing){
+        return Promise.resolve()
+      }
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.id = id
+        script.onload = resolve
+        script.onerror = reject
+        script.src = url
+        document.getElementsByTagName('head')[0].appendChild(script)
+      })
+    },
+    loadCss(id, url) {
+      const existing = document.getElementById(id)
+      if(existing){
+        return Promise.resolve()
+      }
+      return new Promise((resolve, reject) => {
+          var link = document.createElement('link')
+          link.id = id
+          link.onload = resolve
+          link.onerror = reject
+          link.type = 'text/css'
+          link.rel = 'stylesheet'
+          link.href = url
+          document.getElementsByTagName('head')[0].appendChild(link)
+      })
+    },
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -163,6 +233,7 @@ export default Vue.extend({
       });
     },
     cropAndUpload() {
+      this.busy = true;
       this.cropper.getCroppedCanvas().toBlob(
         (blob) => {
           this.resizeAndUpload(blob);
@@ -185,23 +256,23 @@ export default Vue.extend({
         });
     },
     async upload(file) {
-      this.uploading = true;
       if (file == null) {
         alert("error, no file");
         return;
       }
+      console.log('upload', file)
       // todo
       //   const formData = new FormData()
       //   formData.append('file', file, this.fileName!)
       //   const {
       //     data: { url },
       //   } = await HttpClient.post('api/media/upload', formData)
-      this.uploading = false;
+      this.busy = false;
       //this.$emit('input', url)
-      this.reset();
+      this.showModal = false;
     },
     reset() {
-      this.showModal = false;
+      //this.showModal = false;
       this.url = null;
       this.fileName = null;
       this.fileType = null;
@@ -210,3 +281,21 @@ export default Vue.extend({
   },
 });
 </script>
+<style>
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+</style>
