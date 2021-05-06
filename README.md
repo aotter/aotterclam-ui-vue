@@ -16,7 +16,7 @@
 npm login --registry=https://npm.pkg.github.com --scope=@aotter
 ```
   - username: your github username
-  - password: generate a github personal access token with `read:packages` privilege
+  - password: generate a github personal access token with `repo` and `read:packages` privilege
 
 
 3. In your project, run
