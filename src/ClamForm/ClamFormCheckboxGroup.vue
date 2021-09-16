@@ -9,7 +9,7 @@
         <input
           type="checkbox"
           ref="cb"
-          class="form-check-input"
+          :class="['form-control', getValidationClass(validationContext)]"
           :id="`${field.name}_${index}`"
           :value="option.value"
           v-model="localValue"

@@ -92,6 +92,7 @@ import ClamForm_INPUT from "./ClamFormInput.vue";
 import ClamForm_RADIO from "./ClamFormRadioGroup.vue";
 //import ClamForm_DATE from "./ClamFormDatePicker.vue";
 import ClamForm_TEXTAREA from "./ClamFormTextArea.vue";
+import ClamForm_SELECT from "./ClamFormSelect.vue";
 import ClamForm_CHECKBOXES from "./ClamFormCheckboxGroup.vue";
 //import ClamForm_SWITCH from "./ClamFormSwitch.vue";
 //import ClamForm_TAGS from "./ClamFormTag.vue";
@@ -102,6 +103,7 @@ export default Vue.extend({
   components: {
     FieldSetArray: () => import("./FieldSetArray.vue").then((d) => d.default),
     ClamForm_INPUT,
+    ClamForm_SELECT,
     ClamForm_RADIO,
     //ClamForm_DATE,
     ClamForm_TEXTAREA,
