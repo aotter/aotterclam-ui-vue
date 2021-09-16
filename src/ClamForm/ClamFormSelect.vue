@@ -1,17 +1,11 @@
 <template>
   <FormGroup v-bind="$props" v-slot="validationContext">
-    <select
-      :class="['form-control', getValidationClass(validationContext)]"
-      v-model="localValue"
-      @change="onInput($event.target.value)"
-    >
-      <option
-        v-for="(option, index) in field.options"
-        :key="index"
-        :value="option.value"
-        :label="option.text"
-      ></option>
-    </select>
+    <b-form-select
+      :value="value"
+      @input="onInput"
+      :options="_options"
+      :state="getValidationState(validationContext)"
+    ></b-form-select>
   </FormGroup>
 </template>
 <script lang="ts">
@@ -33,14 +27,19 @@ export default Vue.extend({
       },
     },
   },
-  data() {
-    return {
-      // only need to set initial value
-      localValue: this.value,
-    };
+  computed: {
+    _options() {
+      const opts = JSON.parse(JSON.stringify(this.field.options));
+      opts.unshift({
+        value: null,
+        text: this.field?.placeholder ?? "請選擇...",
+        disabled: true,
+      });
+      return opts;
+    },
   },
   methods: {
-    getValidationClass({
+    getValidationState({
       dirty,
       validated,
       valid,
@@ -49,7 +48,7 @@ export default Vue.extend({
       validated: boolean;
       valid: boolean;
     }) {
-      return dirty || validated ? (valid ? "is-valid" : "is-invalid") : "";
+      return dirty || validated ? valid : null;
     },
     onInput(value: any) {
       const v =
