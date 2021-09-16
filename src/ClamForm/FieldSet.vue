@@ -62,7 +62,7 @@ import ClamForm_TEXTAREA from "./ClamFormTextArea.vue";
 import ClamForm_SELECT from "./ClamFormSelect.vue";
 import ClamForm_CHECKBOXES from "./ClamFormCheckboxGroup.vue";
 import ClamForm_SWITCH from "./ClamFormSwitch.vue";
-//import ClamForm_TAGS from "./ClamFormTag.vue";
+import ClamForm_TAGS from "./ClamFormTag.vue";
 import ClamForm_IMAGE from "./ClamFormCropImageUploader.vue";
 
 export default Vue.extend({
@@ -76,7 +76,7 @@ export default Vue.extend({
     ClamForm_TEXTAREA,
     ClamForm_CHECKBOXES,
     ClamForm_SWITCH,
-    //ClamForm_TAGS,
+    ClamForm_TAGS,
     ClamForm_IMAGE,
   },
   props: {

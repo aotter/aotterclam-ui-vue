@@ -1,17 +1,22 @@
 <template>
   <FormGroup v-bind="$props" v-slot="validationContext">
-    <b-form-select
+    <b-form-tags
       :value="value"
       @input="onInput"
-      :options="_options"
+      :placeholder="field.placeholder"
       :readonly="readonly"
       :disabled="disabled"
       :state="getValidationState(validationContext)"
-    ></b-form-select>
+      remove-on-delete
+    ></b-form-tags>
   </FormGroup>
 </template>
 <script lang="ts">
-import { IOptionsClamFormField } from "../types";
+import {
+  IDefaultClamFormField,
+  IInputNumberClamFormField,
+  IInputStringClamFormField,
+} from "../types";
 import Vue from "vue";
 import FormGroup from "./FormGroup.vue";
 
@@ -20,12 +25,14 @@ export default Vue.extend({
     FormGroup,
   },
   props: {
-    value: [String, Number],
+    value: Array,
     field: {
-      type: Object as () => IOptionsClamFormField,
+      type: Object as () =>
+        | IInputStringClamFormField
+        | IInputNumberClamFormField,
       required: true,
-      validator: (value: IOptionsClamFormField) => {
-        return value.formTagType === "SELECT";
+      validator: (value: IDefaultClamFormField) => {
+        return value.formTagType === "TAGS";
       },
     },
     readonly: {
@@ -35,17 +42,6 @@ export default Vue.extend({
     disabled: {
       type: Boolean,
       default: false,
-    },
-  },
-  computed: {
-    _options() {
-      const opts = JSON.parse(JSON.stringify(this.field.options));
-      opts.unshift({
-        value: null,
-        text: this.field?.placeholder ?? "請選擇...",
-        disabled: true,
-      });
-      return opts;
     },
   },
   methods: {
@@ -60,12 +56,8 @@ export default Vue.extend({
     }) {
       return dirty || validated ? valid : null;
     },
-    onInput(value: any) {
-      const v =
-        this.field.contentType === "number"
-          ? new Number(value).valueOf()
-          : value;
-      this.$emit("input", v);
+    onInput(value: any[]) {
+      this.$emit("input", value);
     },
   },
 });
