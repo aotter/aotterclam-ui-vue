@@ -41,17 +41,45 @@
     >
       <div class="card-body">
         <template v-for="childField in field.fields">
-          <component
-            :is="`ClamForm_${childField.formTagType}`"
-            :key="`${field.name}.${childField.name}`"
-            v-bind="$props"
-            :field="childField"
-            v-if="determineShow(childField)"
-            :readonly="determineReadonly(childField)"
-            :disabled="determineDisabled(childField)"
-            :value="getFormDataValue(childField.name)"
-            @input="onInput($event, childField.name)"
-          ></component>
+          <template
+            v-if="
+              childField.fields &&
+              childField.fields.length > 0 &&
+              determineShow(childField)
+            "
+          >
+            <template v-if="childField.contentType === 'Object'">
+              <FieldSetNested
+                v-bind="$props"
+                :key="childField.name"
+                :field="childField"
+                :value="getFormDataValue(childField)"
+                @input="onInput($event, childField.name)"
+              />
+            </template>
+            <template v-else-if="childField.contentType === 'Array'">
+              <FieldSetArray
+                v-bind="$props"
+                :key="childField.name"
+                :field="childField"
+                :value="getFormDataValue(childField)"
+                @input="onInput($event, childField.name)"
+              />
+            </template>
+          </template>
+          <template v-else>
+            <component
+              :is="`ClamForm_${childField.formTagType}`"
+              :key="`${field.name}.${childField.name}`"
+              v-bind="$props"
+              :field="childField"
+              v-if="determineShow(childField)"
+              :readonly="determineReadonly(childField)"
+              :disabled="determineDisabled(childField)"
+              :value="getFormDataValue(childField)"
+              @input="onInput($event, childField.name)"
+            ></component>
+          </template>
         </template>
       </div>
     </div>
@@ -70,7 +98,9 @@ import ClamForm_CHECKBOXES from "./ClamFormCheckboxGroup.vue";
 import ClamForm_IMAGE from "./ClamFormCropImageUploader.vue";
 
 export default Vue.extend({
+  name: "FieldSetNested",
   components: {
+    FieldSetArray: () => import("./FieldSetArray.vue").then((d) => d.default),
     ClamForm_INPUT,
     ClamForm_RADIO,
     //ClamForm_DATE,
@@ -124,8 +154,16 @@ export default Vue.extend({
         return false;
       }
     },
-    getFormDataValue(name: string) {
-      return this.value ? this.value[name] : null;
+    getFormDataValue(field: IClamFormField) {
+      const defaultValue =
+        field.contentType === "Object"
+          ? {}
+          : field.contentType === "Array"
+          ? []
+          : null;
+      return this.value && this.value[field.name]
+        ? this.value[field.name]
+        : defaultValue;
     },
     onInput(value: any, name: string) {
       this.$emit("input", { ...this.value, [name]: value });

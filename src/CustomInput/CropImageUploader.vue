@@ -81,28 +81,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <b-modal
-      v-model="showModal"
-      title="選擇裁切範圍"
-      cancel-title="取消"
-      ok-title="確認裁切上傳"
-      @hide="reset"
-    >
-      <b-overlay :show="busy" rounded="sm">
-        <img
-          ref="image"
-          :src="url"
-          crossorigin
-          style="max-width: 100%; max-height: 350px"
-        />
-      </b-overlay>
-      <template slot="modal-footer">
-        <b-button @click="cropAndUpload" :disabled="busy"
-          >確認裁切上傳 <i v-if="busy" class="fas fa-spinner fa-spin"></i>
-        </b-button>
-      </template>
-    </b-modal> -->
   </div>
 </template>
 <script lang="js">

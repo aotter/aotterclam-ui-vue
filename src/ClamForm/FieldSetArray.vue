@@ -26,7 +26,9 @@
     </draggable>
     <div class="row">
       <div class="col">
-        <button type="button" class="btn btn-primary btn-sm" @click="add">新增{{ field.label }}</button>
+        <button type="button" class="btn btn-primary btn-sm" @click="add">
+          新增{{ field.label }}
+        </button>
       </div>
       <div class="col text-right">
         <small v-if="value.length > 1">可用拖曳的方式調整順序</small>
@@ -45,13 +47,16 @@ export default Vue.extend({
     draggable,
     FieldSetNested,
   },
-  props:{
-    value:{
-      type: Array
+  props: {
+    value: {
+      type: Array,
+      default() {
+        return [];
+      },
     },
-    field:{
-      type:Object as () => IClamFormField
-    }
+    field: {
+      type: Object as () => IClamFormField,
+    },
   },
   data() {
     return {
@@ -63,17 +68,6 @@ export default Vue.extend({
       const newValArray = [...this.value];
       newValArray.splice(index, 1);
       this.$emit("input", newValArray);
-      // this.$confirm('您即將刪除本區塊資料，確定嗎？', '確認移除', {
-      //   confirmButtonText: '確認移除',
-      //   cancelButtonText: '取消',
-      //   type: 'warning',
-      // })
-      //   .then(() => {
-      //     const newValArray = [...this.value]
-      //     newValArray.splice(index, 1)
-      //     this.$emit('input', newValArray)
-      //   })
-      //   .catch(() => {})
     },
     add() {
       const newVal = [...this.value];

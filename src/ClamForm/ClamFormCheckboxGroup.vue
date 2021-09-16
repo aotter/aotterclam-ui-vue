@@ -1,5 +1,5 @@
 <template>
-  <FormGroup v-bind="$props" v-slot="validationContext">
+  <FormGroup v-bind="$props">
     <div role="group" :id="field.name">
       <div
         class="form-check form-check-inline"
@@ -8,10 +8,12 @@
       >
         <input
           type="checkbox"
-          :class="['form-check-input', getValidationClass(validationContext)]"
-          :value="option.value"
+          ref="cb"
+          class="form-check-input"
           :id="`${field.name}_${index}`"
+          :value="option.value"
           v-model="localValue"
+          @change="updateVals"
         />
 
         <label
@@ -22,26 +24,22 @@
       </div>
     </div>
   </FormGroup>
-  <!-- <FormGroup v-bind="$props" v-slot="validationContext">
-    <b-form-checkbox-group
-      :checked="value"
-      @input="onInput"
-      :options="_options"
-      :state="getValidationState(validationContext)"
-    ></b-form-checkbox-group>
-  </FormGroup> -->
 </template>
 <script lang="ts">
-import { IClamFormField, IOptionsClamFormField } from "../types";
+import { IOptionsClamFormField } from "../types";
 import Vue from "vue";
 import FormGroup from "./FormGroup.vue";
+
+// watch out for https://github.com/logaretm/vee-validate/issues/2520
 
 export default Vue.extend({
   components: {
     FormGroup,
   },
   props: {
-    value: Array,
+    value: {
+      type: Array,
+    },
     field: {
       type: Object as () => IOptionsClamFormField,
       required: true,
@@ -52,18 +50,9 @@ export default Vue.extend({
   },
   data() {
     return {
+      // only need to set initial value
       localValue: this.value,
     };
-  },
-  watch: {
-    localValue(newValue, oldValue) {
-      const vs = newValue.map((v: any) => {
-        return this.field.contentType === "number"
-          ? new Number(v).valueOf()
-          : v;
-      });
-      this.$emit("input", vs);
-    },
   },
   methods: {
     getValidationClass({
@@ -76,6 +65,12 @@ export default Vue.extend({
       valid: boolean;
     }) {
       return dirty || validated ? (valid ? "is-valid" : "is-invalid") : "";
+    },
+    updateVals(e: any) {
+      const vals = (this.$refs["cb"] as any)
+        .filter((t: any) => t.checked)
+        .map((t: any) => t.value);
+      this.$emit("input", vals);
     },
   },
 });
