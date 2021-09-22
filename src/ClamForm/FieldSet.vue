@@ -1,7 +1,9 @@
 <template>
   <div>
     <template v-for="field in fields">
-      <template v-if="field.fields && field.fields.length > 0">
+      <template
+        v-if="field.fields && field.fields.length > 0 && determineShow(field)"
+      >
         <div class="form-group row" :key="field.name">
           <label
             for=""

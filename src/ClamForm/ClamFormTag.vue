@@ -6,6 +6,7 @@
       :placeholder="field.placeholder"
       :readonly="readonly"
       :disabled="disabled"
+      :separator="[' ', ',', ';']"
       :state="getValidationState(validationContext)"
       remove-on-delete
     ></b-form-tags>

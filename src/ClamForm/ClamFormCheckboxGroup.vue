@@ -1,28 +1,11 @@
 <template>
-  <FormGroup v-bind="$props">
-    <div role="group" :id="field.name">
-      <div
-        class="form-check form-check-inline"
-        v-for="(option, index) in field.options"
-        :key="index"
-      >
-        <input
-          type="checkbox"
-          ref="cb"
-          :class="['form-control', getValidationClass(validationContext)]"
-          :id="`${field.name}_${index}`"
-          :value="option.value"
-          v-model="localValue"
-          @change="updateVals"
-        />
-
-        <label
-          class="form-check-label"
-          :for="`${field.name}_${index}`"
-          v-text="option.text"
-        ></label>
-      </div>
-    </div>
+  <FormGroup v-bind="$props" v-slot="validationContext">
+    <b-form-checkbox-group
+      :checked="value"
+      @change="onInput"
+      :options="field.options"
+      :state="getValidationState(validationContext)"
+    ></b-form-checkbox-group>
   </FormGroup>
 </template>
 <script lang="ts">
@@ -48,14 +31,8 @@ export default Vue.extend({
       },
     },
   },
-  data() {
-    return {
-      // only need to set initial value
-      localValue: this.value,
-    };
-  },
   methods: {
-    getValidationClass({
+    getValidationState({
       dirty,
       validated,
       valid,
@@ -64,13 +41,15 @@ export default Vue.extend({
       validated: boolean;
       valid: boolean;
     }) {
-      return dirty || validated ? (valid ? "is-valid" : "is-invalid") : "";
+      return dirty || validated ? valid : null;
     },
-    updateVals(e: any) {
-      const vals = (this.$refs["cb"] as any)
-        .filter((t: any) => t.checked)
-        .map((t: any) => t.value);
-      this.$emit("input", vals);
+    onInput(value: any[]) {
+      console.log(value);
+      const v =
+        this.field.contentType === "number"
+          ? value.map((v) => new Number(v).valueOf())
+          : value;
+      this.$emit("input", v);
     },
   },
 });
