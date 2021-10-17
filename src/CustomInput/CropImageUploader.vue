@@ -14,7 +14,7 @@
         class="btn btn-outline-secondary"
         @click.prevent="triggerFileInput"
       >
-        <i class="fas fa-upload"></i> 上傳
+        <b-icon icon="upload"></b-icon> 上傳
       </button>
       <small
         class="text-muted"

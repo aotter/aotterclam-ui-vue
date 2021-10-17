@@ -64,4 +64,5 @@ export default Vue.extend({
 
 ```
 
-require boostrap-vue deps
+require boostrap-vue  and bootstrap-vue-icons deps
+node 14

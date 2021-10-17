@@ -14,6 +14,11 @@ interface IBaseClamFormField {
   fields?: IClamFormField[] // nested fields
 }
 
+export interface IArrayClamFormField extends IBaseClamFormField {
+  contentType: 'Array',
+  getTitle?: (data: any) => string
+}
+
 export interface IDefaultClamFormField extends IBaseClamFormField {
   formTagType: 'DATE' | 'SWITCH' | 'TAGS' | 'TEXTAREA'
 }
@@ -55,4 +60,4 @@ export interface IImageClamFormField extends IBaseClamFormField {
   }
 }
 
-export type IClamFormField = IOptionsClamFormField | IInputStringClamFormField | IInputNumberClamFormField | IDefaultClamFormField | IImageClamFormField
+export type IClamFormField = IOptionsClamFormField | IInputStringClamFormField | IInputNumberClamFormField | IDefaultClamFormField | IImageClamFormField | IArrayClamFormField

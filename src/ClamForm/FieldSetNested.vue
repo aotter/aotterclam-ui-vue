@@ -1,87 +1,47 @@
 <template>
   <div class="card bg-light">
-    <div
-      v-if="showHeader"
-      class="card-header handle"
-      :style="{ cursor: dragging ? 'grabbing' : 'grab' }"
-    >
-      <div class="row justify-content-between">
-        <div class="col">
-          <span class="align-middle ml-2" v-text="headerTitle"></span>
-        </div>
-        <div class="col text-right">
-          <button
-            type="button"
-            class="btn btn-link btn-sm"
-            @click="visible = !visible"
-          >
-            <small v-if="!visible"
-              >點擊展開
-              <i class="fas fa-chevron-right"></i>
-            </small>
-            <small v-if="visible"
-              >點擊收合
-              <i class="fas fa-chevron-down"></i>
-            </small>
-          </button>
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary"
-            @click="$emit('remove')"
-          >
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div
-      class="collapse"
-      :class="[visible ? 'show' : '']"
-      :id="`collapse_${field.name}`"
-    >
-      <div class="card-body">
-        <template v-for="childField in field.fields">
-          <template
-            v-if="
-              childField.fields &&
-              childField.fields.length > 0 &&
-              determineShow(childField)
-            "
-          >
-            <template v-if="childField.contentType === 'Object'">
-              <FieldSetNested
-                v-bind="$props"
-                :key="childField.name"
-                :field="childField"
-                :value="getFormDataValue(childField)"
-                @input="onInput($event, childField.name)"
-              />
-            </template>
-            <template v-else-if="childField.contentType === 'Array'">
-              <FieldSetArray
-                v-bind="$props"
-                :key="childField.name"
-                :field="childField"
-                :value="getFormDataValue(childField)"
-                @input="onInput($event, childField.name)"
-              />
-            </template>
-          </template>
-          <template v-else>
-            <component
-              :is="`ClamForm_${childField.formTagType}`"
-              :key="`${field.name}.${childField.name}`"
+    <div class="card-body">
+      <template v-for="childField in field.fields">
+        <template
+          v-if="
+            childField.fields &&
+            childField.fields.length > 0 &&
+            determineShow(childField)
+          "
+        >
+          <template v-if="childField.contentType === 'Object'">
+            <FieldSetNested
               v-bind="$props"
+              :key="childField.name"
               :field="childField"
-              v-if="determineShow(childField)"
-              :readonly="determineReadonly(childField)"
-              :disabled="determineDisabled(childField)"
               :value="getFormDataValue(childField)"
               @input="onInput($event, childField.name)"
-            ></component>
+            />
+          </template>
+          <template v-else-if="childField.contentType === 'Array'">
+            <FieldSetArray
+              v-bind="$props"
+              :key="childField.name"
+              :field="childField"
+              :value="getFormDataValue(childField)"
+              @input="onInput($event, childField.name)"
+            />
           </template>
         </template>
-      </div>
+        <template v-else>
+          <component
+            :is="`ClamForm_${childField.formTagType}`"
+            :key="`${field.name}.${childField.name}`"
+            v-bind="$props"
+            :field="childField"
+            v-if="determineShow(childField)"
+            :readonly="determineReadonly(childField)"
+            :disabled="determineDisabled(childField)"
+            :value="getFormDataValue(childField)"
+            @input="onInput($event, childField.name)"
+          ></component>
+        </template>
+      </template>
     </div>
   </div>
 </template>
@@ -119,20 +79,9 @@ export default Vue.extend({
     field: {
       type: Object as () => IClamFormField,
     },
-    dragging: {
-      type: Boolean,
-    },
-    showHeader: {
-      type: Boolean,
-    },
-    headerTitle: {
-      type: String,
-    },
   },
   data() {
-    return {
-      visible: true,
-    };
+    return {};
   },
   methods: {
     determineShow(field: IClamFormField) {
@@ -173,8 +122,3 @@ export default Vue.extend({
   },
 });
 </script>
-<style scoped>
-.card-header {
-  padding: 0;
-}
-</style>
