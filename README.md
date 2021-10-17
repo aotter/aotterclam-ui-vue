@@ -63,3 +63,5 @@ export default Vue.extend({
 </script>
 
 ```
+
+require boostrap-vue deps
