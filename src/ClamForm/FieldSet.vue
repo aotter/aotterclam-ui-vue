@@ -38,7 +38,7 @@
       </template>
       <template v-else>
         <component
-          :is="`ClamForm_${field.formTagType}`"
+          :is="getComponentName(field)"
           :key="field.name"
           v-if="determineShow(field)"
           v-bind="$props"
@@ -66,6 +66,7 @@ import ClamForm_CHECKBOXES from "./ClamFormCheckboxGroup.vue";
 import ClamForm_SWITCH from "./ClamFormSwitch.vue";
 import ClamForm_TAGS from "./ClamFormTag.vue";
 import ClamForm_IMAGE from "./ClamFormCropImageUploader.vue";
+import ClamForm_CUSTOM from "./CustomWrapper.vue";
 
 export default Vue.extend({
   name: "FieldSet",
@@ -81,6 +82,7 @@ export default Vue.extend({
     ClamForm_SWITCH,
     ClamForm_TAGS,
     ClamForm_IMAGE,
+    ClamForm_CUSTOM,
   },
   props: {
     value: {
@@ -91,6 +93,11 @@ export default Vue.extend({
     },
   },
   methods: {
+    getComponentName(field: IClamFormField) {
+      return field.component
+        ? "ClamForm_CUSTOM"
+        : `ClamForm_${field.formTagType}`;
+    },
     determineShow(field: IClamFormField) {
       return field.showIf ? field.showIf(this.value) : true;
     },
