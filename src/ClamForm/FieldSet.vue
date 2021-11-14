@@ -68,6 +68,7 @@ import ClamForm_TAGS from "./ClamFormTag.vue";
 import ClamForm_IMAGE from "./ClamFormCropImageUploader.vue";
 
 export default Vue.extend({
+  name: "FieldSet",
   components: {
     FieldSetNested,
     FieldSetArray,

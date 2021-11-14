@@ -51,20 +51,51 @@
         >
       </div>
     </div>
-    <b-modal
-      ref="modal"
-      :title="modalTitle"
-      ok-title="確認"
-      cancel-title="取消"
-      @ok="onOk"
+    <!-- boostrap-vue b-modal is causing Chinese input compositionend vent interruption, use hand-crafted modal instead -->
+    <!-- Modal-->
+    <transition
+      @enter="startTransitionModal"
+      @after-enter="endTransitionModal"
+      @before-leave="endTransitionModal"
+      @after-leave="startTransitionModal"
     >
-      <FieldSetNested
-        v-bind="$props"
-        :field="field"
-        :value="tmpData"
-        @input="onInput($event)"
-      />
-    </b-modal>
+      <div class="modal fade" v-if="showModal" ref="modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                {{ modalTitle }}
+              </h5>
+              <button
+                class="close"
+                type="button"
+                @click="showModal = !showModal"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <FieldSetNested
+                v-bind="$props"
+                :field="field"
+                :value="tmpData"
+                @input="onInput($event)"
+              />
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" @click="showModal = !showModal">
+                取消
+              </button>
+              <button class="btn btn-primary" type="button" @click="onOk">
+                確認
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <div class="modal-backdrop fade d-none" ref="backdrop"></div>
+    <!--end Modal-->
   </div>
 </template>
 <script >
@@ -91,6 +122,7 @@ export default Vue.extend({
   data() {
     return {
       dragging: false,
+      showModal: false,
       editIndex: null, // index of the currently editing data
       tmpData: {}, // currently working data
       mode: "create", // 'create' or 'update'
@@ -116,14 +148,15 @@ export default Vue.extend({
       this.$emit("input", newValArray);
     },
     add() {
+      this.tmpData = {};
       this.mode = "create";
-      this.showModal();
+      this.showModal = true;
     },
     update(data, index) {
       this.tmpData = JSON.parse(JSON.stringify(data));
       this.editIndex = index;
       this.mode = "update";
-      this.showModal();
+      this.showModal = true;
     },
     onOk() {
       const localData = JSON.parse(JSON.stringify(this.tmpData));
@@ -137,13 +170,18 @@ export default Vue.extend({
         newValArray[this.editIndex] = localData;
       }
       this.$emit("input", newValArray);
-      this.tmpData = {};
+      this.showModal = false;
     },
     onInput(data) {
       this.tmpData = data;
     },
-    showModal() {
-      this.$refs["modal"].show();
+    startTransitionModal() {
+      this.$refs.backdrop?.classList?.toggle("d-block");
+      this.$refs.modal?.classList?.toggle("d-block");
+    },
+    endTransitionModal() {
+      this.$refs.backdrop?.classList?.toggle("show");
+      this.$refs.modal?.classList?.toggle("show");
     },
   },
 });
