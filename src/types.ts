@@ -3,6 +3,7 @@ export type ClamFormFieldContentType = 'string' | 'number' | 'boolean' | 'Object
 
 interface IBaseClamFormField {
   name: string
+  component?: string
   label?: string
   contentType: ClamFormFieldContentType
   description?: string
@@ -15,6 +16,7 @@ interface IBaseClamFormField {
 }
 
 export interface IArrayClamFormField extends IBaseClamFormField {
+  formTagType: null,
   contentType: 'Array',
   getTitle?: (data: any) => string,
   settings?: {
