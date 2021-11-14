@@ -16,7 +16,10 @@ interface IBaseClamFormField {
 
 export interface IArrayClamFormField extends IBaseClamFormField {
   contentType: 'Array',
-  getTitle?: (data: any) => string
+  getTitle?: (data: any) => string,
+  settings?: {
+    modalSize?: 'xl' | 'lg' | 'sm'
+  }
 }
 
 export interface IDefaultClamFormField extends IBaseClamFormField {

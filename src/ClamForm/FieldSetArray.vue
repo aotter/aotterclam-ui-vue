@@ -60,7 +60,11 @@
       @after-leave="startTransitionModal"
     >
       <div class="modal fade" v-if="showModal" ref="modal">
-        <div class="modal-dialog" role="document">
+        <div
+          class="modal-dialog"
+          :class="[modalSize ? `modal-${modalSize}` : '']"
+          role="document"
+        >
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">
@@ -134,6 +138,9 @@ export default Vue.extend({
       return this.mode === "create"
         ? `新增${label}`
         : `編輯${this.getTitle(this.tmpData, this.editIndex)}`;
+    },
+    modalSize() {
+      return this.field.settings?.modalSize;
     },
   },
   methods: {
