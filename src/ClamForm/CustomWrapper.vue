@@ -6,7 +6,9 @@
         :field="field"
         @input="onInput"
         :value="value"
-        :state="getValidationState(validationContext)"
+        :readonly="readonly"
+        :disabled="disabled"
+        :validation-context="validationContext"
       />
     </FormGroup>
   </div>
@@ -19,7 +21,7 @@ export default Vue.extend({
   components: {
     FormGroup,
   },
-  props: ["value", "field"],
+  props: ["value", "field", "readonly", "disabled"],
   computed: {},
   methods: {
     getValidationState({ dirty, validated, valid }) {
