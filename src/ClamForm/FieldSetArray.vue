@@ -61,7 +61,7 @@
     >
       <div class="modal fade" v-if="showModal" ref="modal">
         <div
-          class="modal-dialog"
+          class="modal-dialog modal-dialog-scrollable"
           :class="[modalSize ? `modal-${modalSize}` : '']"
           role="document"
         >
