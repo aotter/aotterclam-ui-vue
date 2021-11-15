@@ -87,10 +87,13 @@
               />
             </div>
             <div class="modal-footer">
-              <button class="btn btn-secondary" @click="showModal = !showModal">
+              <button
+                class="btn btn-secondary"
+                @click.prevent="showModal = !showModal"
+              >
                 取消
               </button>
-              <button class="btn btn-primary" type="button" @click="onOk">
+              <button class="btn btn-primary" @click.prevent="onOk">
                 確認
               </button>
             </div>
