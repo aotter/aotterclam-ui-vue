@@ -11,31 +11,40 @@
         <b-list-group-item
           v-for="(data, index) in value"
           :key="`${field.name}.${index}`"
-          class="d-flex justify-content-between align-items-center"
+          class="flex-column align-items-start"
         >
-          {{ getTitle(data, index) }}
-          <div>
-            <b-button
-              variant="outline-secondary"
-              size="sm"
-              @click="update(data, index)"
-              ><b-icon icon="pencil-square"></b-icon
-            ></b-button>
-            <b-button
-              variant="outline-secondary"
-              size="sm"
-              @click="remove(index)"
-              ><b-icon icon="trash"></b-icon
-            ></b-button>
-            <b-button
-              v-if="value.length > 1"
-              class="handle"
-              variant="outline-secondary"
-              size="sm"
-              :style="{ cursor: dragging ? 'grabbing' : 'grab' }"
-              ><b-icon icon="arrow-down-up"></b-icon
-            ></b-button>
+          <div class="d-flex w-100 justify-content-between">
+            <div>
+              {{ getTitle(data, index) }}
+            </div>
+            <div>
+              <b-button
+                variant="outline-secondary"
+                size="sm"
+                @click="update(data, index)"
+                ><b-icon icon="pencil-square"></b-icon
+              ></b-button>
+              <b-button
+                variant="outline-secondary"
+                size="sm"
+                @click="remove(index)"
+                ><b-icon icon="trash"></b-icon
+              ></b-button>
+              <b-button
+                v-if="value.length > 1"
+                class="handle"
+                variant="outline-secondary"
+                size="sm"
+                :style="{ cursor: dragging ? 'grabbing' : 'grab' }"
+                ><b-icon icon="arrow-down-up"></b-icon
+              ></b-button>
+            </div>
           </div>
+          <p
+            class="mb-1 text-muted"
+            v-if="getSummary(data)"
+            v-html="nl2br(getSummary(data))"
+          ></p>
         </b-list-group-item>
       </draggable>
     </b-list-group>
@@ -151,6 +160,21 @@ export default Vue.extend({
       return this.field?.getTitle
         ? this.field?.getTitle(data)
         : `${this.field.label} #${index + 1}`;
+    },
+    getSummary(data) {
+      return this.field?.getSummary ? this.field?.getSummary(data) : null;
+    },
+    // todo: move into util class?
+    nl2br(str, is_xhtml) {
+      if (typeof str === "undefined" || str === null) {
+        return "";
+      }
+      var breakTag =
+        is_xhtml || typeof is_xhtml === "undefined" ? "<br />" : "<br>";
+      return (str + "").replace(
+        /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g,
+        "$1" + breakTag + "$2"
+      );
     },
     remove(index) {
       const newValArray = [...this.value];

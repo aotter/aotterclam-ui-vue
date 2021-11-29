@@ -19,6 +19,7 @@ export interface IArrayClamFormField extends IBaseClamFormField {
   formTagType: null,
   contentType: 'Array',
   getTitle?: (data: any) => string,
+  getSummary?: (data: any) => string, // support line seperator
   settings?: {
     modalSize?: 'xl' | 'lg' | 'sm'
   }
