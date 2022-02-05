@@ -1,12 +1,21 @@
 <template>
   <ValidationProvider
+    slim
     :name="field.name"
     :rules="field.rules"
     v-slot="validationContext"
   >
-    <slot
-      v-bind="{ validationContext, fieldValue, show, readonly, disabled }"
-    ></slot>
+    <component :is="layoutComponent" :validation-context="validationContext">
+      <slot
+        v-bind="{
+          validationContext,
+          fieldValue,
+          show,
+          readonly,
+          disabled,
+        }"
+      ></slot>
+    </component>
   </ValidationProvider>
 </template>
 <script lang="ts">
@@ -14,9 +23,8 @@ import Vue from "vue";
 import { IBaseClamField } from "../core/types";
 export default Vue.extend({
   props: {
-    value: {
-      type: Object,
-    },
+    layoutComponent: [Object, Function, Promise],
+    value: [Object, Array],
     field: {
       type: Object,
       required: true,

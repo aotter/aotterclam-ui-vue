@@ -5,6 +5,7 @@
         v-if="fields && fields.length > 0"
         :fields="fields"
         :value="value"
+        :fieldLayoutComponent="fieldLayoutComponent"
         @input="$emit('input', $event)"
       />
       <slot></slot>
@@ -21,6 +22,7 @@ export default Vue.extend({
     FieldSet,
   },
   props: {
+    fieldLayoutComponent: [Object, Function, Promise],
     value: {
       type: Object,
     },

@@ -1,22 +1,24 @@
 <template>
   <div>
-    <ul>
-      <template v-for="field in fields">
-        <li :key="field.name">
-          <Field
-            :field="field"
-            :value="value"
-            v-slot="{ validationContext, fieldValue, show, readonly, disabled }"
-          >
-            {{ field }} v: {{ fieldValue }} {{ validationContext }} {{ show }}
-            {{ readonly }} {{ disabled }}
-            <template v-if="field.fields && field.fields.length > 0">
-              <FieldSet :fields="field.fields" />
-            </template>
-          </Field>
-        </li>
-      </template>
-    </ul>
+    <template v-for="field in fields">
+      <Field
+        :key="field.name"
+        :field="field"
+        :value="value"
+        :layoutComponent="fieldLayoutComponent"
+        v-slot="{ validationContext, fieldValue, show, readonly, disabled }"
+      >
+        {{ field }} v: {{ fieldValue }} {{ validationContext }} {{ show }}
+        {{ readonly }} {{ disabled }}
+        <template v-if="field.fields && field.fields.length > 0">
+          <FieldSet
+            :fields="field.fields"
+            :value="fieldValue"
+            :fieldLayoutComponent="fieldLayoutComponent"
+          />
+        </template>
+      </Field>
+    </template>
   </div>
 </template>
 <script lang="ts">
@@ -29,9 +31,8 @@ export default Vue.extend({
     Field,
   },
   props: {
-    value: {
-      type: Object,
-    },
+    fieldLayoutComponent: [Object, Function, Promise],
+    value: [Object, Array],
     fields: {
       type: Array,
     },
