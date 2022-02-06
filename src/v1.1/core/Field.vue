@@ -1,16 +1,20 @@
 <template>
   <ValidationProvider
-    slim
+    v-if="show"
     :name="field.name"
     :rules="field.rules"
     v-slot="validationContext"
+    slim
   >
-    <component :is="layoutComponent" :validation-context="validationContext">
+    <component
+      :is="layoutComponent"
+      :validation-context="validationContext"
+      :field="field"
+    >
       <slot
         v-bind="{
           validationContext,
           fieldValue,
-          show,
           readonly,
           disabled,
         }"
@@ -23,7 +27,7 @@ import Vue from "vue";
 import { IBaseClamField } from "../core/types";
 export default Vue.extend({
   props: {
-    layoutComponent: [Object, Function, Promise],
+    layoutComponent: [String, Object, Function, Promise],
     value: [Object, Array],
     field: {
       type: Object,
@@ -31,23 +35,22 @@ export default Vue.extend({
     },
   },
   computed: {
+    clamField(): IBaseClamField {
+      return this.field as IBaseClamField;
+    },
     fieldValue(): string | null {
-      const field = this.field as IBaseClamField;
-      return this.value && this.value[field.name]
-        ? this.value[field.name]
+      return this.value && this.value[this.clamField.name]
+        ? this.value[this.clamField.name]
         : null;
     },
     show(): boolean {
-      const field = this.field as IBaseClamField;
-      return this.determine(field.show);
+      return this.clamField.show ? this.determine(this.clamField.show) : true;
     },
     readonly(): boolean {
-      const field = this.field as IBaseClamField;
-      return this.determine(field.readonly);
+      return this.determine(this.clamField.readonly);
     },
     disabled(): boolean {
-      const field = this.field as IBaseClamField;
-      return this.determine(field.disabled);
+      return this.determine(this.clamField.disabled);
     },
   },
   methods: {

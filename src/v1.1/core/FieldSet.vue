@@ -5,17 +5,32 @@
         :key="field.name"
         :field="field"
         :value="value"
-        :layoutComponent="fieldLayoutComponent"
-        v-slot="{ validationContext, fieldValue, show, readonly, disabled }"
+        :layout-component="fieldLayoutComponent"
+        v-slot="{ validationContext, fieldValue, readonly, disabled }"
       >
-        {{ field }} v: {{ fieldValue }} {{ validationContext }} {{ show }}
-        {{ readonly }} {{ disabled }}
         <template v-if="field.fields && field.fields.length > 0">
           <FieldSet
             :fields="field.fields"
             :value="fieldValue"
-            :fieldLayoutComponent="fieldLayoutComponent"
+            :field-layout-component="fieldLayoutComponent"
+            :field-content-component="fieldContentComponent"
+            @input="onInput($event, field)"
           />
+        </template>
+        <template v-else>
+          <component
+            v-if="fieldContentComponent"
+            :is="fieldContentComponent"
+            :field="field"
+            :value="fieldValue"
+            :validation-context="validationContext"
+            :readonly="readonly"
+            :disabled="disabled"
+            @input="onInput($event, field)"
+          />
+          <span v-else
+            >Missing fieldContentComponent for field {{ field.name }}</span
+          >
         </template>
       </Field>
     </template>
@@ -24,6 +39,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Field from "./Field.vue";
+import { IBaseClamField } from "./types";
 
 export default Vue.extend({
   name: "FieldSet",
@@ -31,12 +47,18 @@ export default Vue.extend({
     Field,
   },
   props: {
-    fieldLayoutComponent: [Object, Function, Promise],
+    fieldLayoutComponent: [String, Object, Function, Promise],
+    fieldContentComponent: [String, Object, Function, Promise],
     value: [Object, Array],
     fields: {
       type: Array,
     },
   },
-  methods: {},
+  methods: {
+    onInput(value: any, field: IBaseClamField) {
+      console.log(value, field);
+      this.$emit("input", { ...this.value, [field.name]: value });
+    },
+  },
 });
 </script>

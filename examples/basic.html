@@ -31,6 +31,9 @@
                     <clam-form class="foo" v-model="formData" :fields="fields">
                     </clam-form>
                 </div>
+                <div class="col col-md-4 col-xs-12">
+                    {{ formData }}
+                </div>
             </div>
         </div>
     </div>
@@ -60,64 +63,46 @@
                 ClamForm: aotterclamui['ClamForm']
             },
             data: {
-                formData: {
-                    title:'標題提',
-                    list:[{
-                        name:'ddd'
-                    }]
-                }
+                formData: {}
             },
             computed: {
                 fields() {
                     return [
                         {
-                            name: "title",
-                            label: "標題",
-                            contentType: "string",
-                            formTagType: "INPUT",
-                            description: "資料的標題",
+                            name: "name",
+                            label: "姓名",
+                            contentType: 'string',
+                            component: "INPUT",
+                            description: "輸入姓名，最多 20 個字",
+                            placeholder: '王大明',
                             rules: "required",
-                            disabled: (data) => {
-                                return data.author && data.author.age > 40;
-                            },
+                            inputTagAttrs: {
+                                maxlength: 20
+                            }
                         },
                         {
-                            name: "list",
-                            label: "列表",
-                            contentType: "Array",
-                            getTitle(data) {
-                                return data.name
-                            },
-                            getSummary(data) {
-                                //return null
-                                return data.name + '\n' + data.name
-                            },
-                            fields: [
-                                {
-                                    name: "name",
-                                    label: "姓名",
-                                    contentType: "string",
-                                    formTagType: "INPUT",
-                                    inputTagType: "text",
-                                },
-                                {
-                                    name: "listn",
-                                    label: "列表",
-                                    contentType: "Array",
-                                    getTitle(data) {
-                                        return data.name + ' 巢狀'
-                                    },
-                                    fields: [
-                                        {
-                                            name: "name",
-                                            label: "姓名",
-                                            contentType: "string",
-                                            formTagType: "INPUT",
-                                            inputTagType: "text",
-                                        },
-                                    ]
-                                },
-                            ]
+                            name: "email",
+                            label: "Email",
+                            contentType: 'email',
+                            component: "INPUT",
+                            description: "輸入您的 Email",
+                            placeholder: 'john.doe@gmail.com',
+                            rules: "required|email",
+                            inputTagAttrs: {
+                                maxlength: 20
+                            }
+                        },
+                        {
+                            name: "height",
+                            label: "身高",
+                            contentType: 'number',
+                            component: "INPUT",
+                            description: "輸入身高 (cm)",
+                            inputTagAttrs: {
+                                min: 100,
+                                max: 300,
+                                step: 0.1
+                            }
                         },
                     ]
                 }

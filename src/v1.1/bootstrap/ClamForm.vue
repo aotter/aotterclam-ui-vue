@@ -4,11 +4,13 @@
     :value="value"
     :fields="fields"
     :fieldLayoutComponent="fieldLayout"
+    :fieldContentComponent="fieldContent"
     @input="$emit('input', $event)"
     @submit="onSubmit"
   >
     <slot>
-      <button class="btn btn-primary">Submit</button>
+      <!-- default submit button -->
+      <button class="btn btn-primary offset-sm-2">Submit</button>
     </slot>
   </BaseForm>
 </template>
@@ -16,13 +18,14 @@
 import Vue from "vue";
 import BaseForm from "../core/BaseForm.vue";
 import FormGroup from "./FormGroup.vue";
+import ClamFormField from "./ClamFormField.vue";
 
 export default Vue.extend({
   components: {
     BaseForm,
   },
   props: {
-    fieldLayoutComponent: [Object, Function, Promise],
+    fieldLayoutComponent: [String, Object, Function, Promise],
     value: {
       type: Object,
     },
@@ -33,6 +36,10 @@ export default Vue.extend({
   computed: {
     fieldLayout() {
       return this.fieldLayoutComponent ?? FormGroup;
+    },
+    fieldContent() {
+      // do not allow override
+      return ClamFormField;
     },
   },
   methods: {
