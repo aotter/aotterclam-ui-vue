@@ -1,6 +1,7 @@
 export type ClamFieldContentType = 'Object' | 'Array' | 'string' | 'string[]' | 'number' | 'number[]' | 'boolean'
 
 export type ClamComponentType = 'INPUT' | 'SELECT' | 'TEXTAREA' | string | Function  // to be put in :is attr of <component />
+
 export interface IBaseClamField {
     name: string
     component: ClamComponentType

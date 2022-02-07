@@ -7,6 +7,7 @@
         :value="value"
         :field-layout-component="fieldLayoutComponent"
         :field-content-component="fieldContentComponent"
+        :array-content-component="arrayContentComponent"
         @input="$emit('input', $event)"
       />
       <slot></slot>
@@ -25,6 +26,7 @@ export default Vue.extend({
   props: {
     fieldLayoutComponent: [String, Object, Function, Promise],
     fieldContentComponent: [String, Object, Function, Promise],
+    arrayContentComponent: [String, Object, Function, Promise],
     value: {
       type: Object,
     },

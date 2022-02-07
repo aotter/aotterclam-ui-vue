@@ -131,9 +131,14 @@
                                 {
                                     name: "name",
                                     label: "姓名",
-                                    contentType: "string",
-                                    formTagType: "INPUT",
-                                    inputTagType: "text",
+                                    contentType: 'string',
+                                    component: "INPUT",
+                                    description: "輸入姓名，最多 20 個字",
+                                    placeholder: '王大明',
+                                    rules: "required",
+                                    inputTagAttrs: {
+                                        maxlength: 20
+                                    }
                                 },
                                 {
                                     name: "listn",
@@ -146,9 +151,14 @@
                                         {
                                             name: "name",
                                             label: "姓名",
-                                            contentType: "string",
-                                            formTagType: "INPUT",
-                                            inputTagType: "text",
+                                            contentType: 'string',
+                                            component: "INPUT",
+                                            description: "輸入姓名，最多 20 個字",
+                                            placeholder: '王大明',
+                                            rules: "required",
+                                            inputTagAttrs: {
+                                                maxlength: 20
+                                            }
                                         },
                                     ]
                                 },
