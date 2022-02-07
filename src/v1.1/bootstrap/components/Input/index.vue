@@ -28,6 +28,7 @@ export default Vue.extend({
   },
   computed: {
     component() {
+      // todo dispatch to different components based on field.contentType
       return "BasicInput";
     },
   },

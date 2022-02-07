@@ -56,7 +56,6 @@ export default Vue.extend({
   },
   methods: {
     onInput(value: any, field: IBaseClamField) {
-      console.log(value, field);
       this.$emit("input", { ...this.value, [field.name]: value });
     },
   },
