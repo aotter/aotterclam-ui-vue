@@ -3,6 +3,8 @@
     :is="component"
     :value="value"
     :field="field"
+    :field-layout-component="fieldLayoutComponent"
+    :field-content-component="fieldContentComponent"
     :readonly="readonly"
     :disabled="disabled"
     :validation-context="validationContext"
@@ -25,6 +27,8 @@ export default Vue.extend({
     OBJECT,
   },
   props: {
+    fieldLayoutComponent: [String, Object, Function, Promise],
+    fieldContentComponent: [String, Object, Function, Promise],
     value: [String, Number, Boolean, Object, Array],
     field: {
       type: Object as PropType<IClamField>,

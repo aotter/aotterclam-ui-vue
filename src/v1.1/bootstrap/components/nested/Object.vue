@@ -7,23 +7,23 @@
       borderVariant ? `border-${borderVariant}` : '',
     ]"
   >
-    <FieldSet
-      :fields="field.fields"
-      :value="value"
-      :readonly="readonly"
-      :disabled="disabled"
-      :field-layout-component="fieldLayoutComponent"
-      :field-content-component="fieldContentComponent"
-      @input="$emit('input', $event)"
-    />
+    <div class="card-body">
+      <FieldSet
+        :fields="field.fields"
+        :value="value"
+        :readonly="readonly"
+        :disabled="disabled"
+        :field-layout-component="fieldLayoutComponent"
+        :field-content-component="fieldContentComponent"
+        @input="$emit('input', $event)"
+      />
+    </div>
   </div>
 </template>
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import FieldSet from "../../../core/FieldSet.vue";
 import { IObjectClamField } from "../../types";
-import FormGroup from "../../FormGroup.vue";
-import ClamFormField from "../../ClamFormField.vue";
 import { FieldMixin } from "../mixins";
 
 export default Vue.extend({
@@ -32,6 +32,8 @@ export default Vue.extend({
     FieldSet,
   },
   props: {
+    fieldLayoutComponent: [String, Object, Function, Promise],
+    fieldContentComponent: [String, Object, Function, Promise],
     value: Object,
     field: {
       type: Object as PropType<IObjectClamField>,
@@ -45,11 +47,8 @@ export default Vue.extend({
     bgVariant(): string | undefined {
       return this.field.settings?.bgVariant;
     },
-    fieldLayoutComponent(): Function {
-      return FormGroup;
-    },
-    fieldContentComponent(): Function {
-      return ClamFormField;
+    borderVariant(): string | undefined {
+      return this.field.settings?.borderVariant;
     },
   },
   methods: {},

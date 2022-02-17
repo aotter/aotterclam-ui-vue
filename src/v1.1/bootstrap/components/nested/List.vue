@@ -76,17 +76,18 @@ import Vue, { PropType } from "vue";
 import Modal from "../common/Modal.vue";
 import FieldSet from "../../../core/FieldSet.vue";
 import { ButtonSetting, IArrayClamField, ModalSetting } from "../../types";
-import FormGroup from "../../FormGroup.vue";
-import ClamFormField from "../../ClamFormField.vue";
 import { FieldMixin } from "../mixins";
 
 export default Vue.extend({
+  name: "LIST",
   mixins: [FieldMixin],
   components: {
     Modal,
     FieldSet,
   },
   props: {
+    fieldLayoutComponent: [String, Object, Function, Promise],
+    fieldContentComponent: [String, Object, Function, Promise],
     value: Array,
     field: {
       type: Object as PropType<IArrayClamField>,
@@ -161,12 +162,6 @@ export default Vue.extend({
         variant: this.modalSetting?.ok?.variant,
         size: this.modalSetting?.ok?.size,
       };
-    },
-    fieldLayoutComponent(): Function {
-      return FormGroup;
-    },
-    fieldContentComponent(): Function {
-      return ClamFormField;
     },
   },
   methods: {

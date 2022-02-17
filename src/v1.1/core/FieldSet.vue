@@ -18,6 +18,8 @@
           :is="fieldContentComponent"
           :field="field"
           :value="fieldValue"
+          :field-layout-component="fieldLayoutComponent"
+          :field-content-component="fieldContentComponent"
           :validation-context="validationContext"
           :readonly="determineReadOnly(fieldReadonly)"
           :disabled="determineDisabled(fieldDisabled)"
