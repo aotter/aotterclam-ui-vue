@@ -32,7 +32,11 @@ export interface ButtonSetting {
 
 export interface IObjectClamField extends IMetaClamField {
     component: 'OBJECT'
-    // 
+    settings?: {
+        textVariant?: string
+        bgVariant?: string
+        borderVariant?: string
+    }
 }
 
 export interface IInputStringClamField extends IMetaClamField {
