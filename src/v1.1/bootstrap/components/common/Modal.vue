@@ -35,7 +35,7 @@
               >
                 {{ cancelTitle }}
               </button>
-              <button class="btn btn-primary" @click.prevent="onOk">
+              <button class="btn btn-primary" @click.prevent="$emit('ok')">
                 {{ okTitle }}
               </button>
             </div>
@@ -83,12 +83,12 @@ export default Vue.extend({
       this.showModal = !this.showModal;
     },
     startTransitionModal() {
-      (this.$refs.backdrop as HTMLElement).classList.toggle("d-block");
-      (this.$refs.modal as HTMLElement).classList.toggle("d-block");
+      (this.$refs.backdrop as HTMLElement)?.classList?.toggle("d-block");
+      (this.$refs.modal as HTMLElement)?.classList?.toggle("d-block");
     },
     endTransitionModal() {
-      (this.$refs.backdrop as HTMLElement).classList.toggle("show");
-      (this.$refs.modal as HTMLElement).classList.toggle("show");
+      (this.$refs.backdrop as HTMLElement)?.classList?.toggle("show");
+      (this.$refs.modal as HTMLElement)?.classList?.toggle("show");
     },
   },
 });

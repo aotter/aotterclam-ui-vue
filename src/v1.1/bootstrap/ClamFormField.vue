@@ -10,7 +10,7 @@
   />
 </template>
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
 import { FieldMixin } from "./components/mixins";
 import { IClamField } from "./types";
 import INPUT from "./components/Input/index.vue";
@@ -22,14 +22,13 @@ export default Vue.extend({
   props: {
     value: [String, Number, Boolean, Object, Array],
     field: {
-      type: Object,
+      type: Object as PropType<IClamField>,
       required: true,
     },
   },
   computed: {
     component(): string | Function {
-      const field = this.field as IClamField;
-      return field.component;
+      return this.field.component;
     },
   },
   methods: {},

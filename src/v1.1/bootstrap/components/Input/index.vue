@@ -10,9 +10,10 @@
   />
 </template>
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
 import BasicInput from "./BasicInput.vue";
 import { FieldMixin } from "../mixins";
+import { IClamField } from "../../types";
 
 export default Vue.extend({
   mixins: [FieldMixin],
@@ -22,13 +23,14 @@ export default Vue.extend({
   props: {
     value: [String, Number],
     field: {
-      type: Object,
+      type: Object as PropType<IClamField>,
       required: true,
     },
   },
   computed: {
-    component() {
+    component(): string {
       // todo dispatch to different components based on field.contentType
+      // see types
       return "BasicInput";
     },
   },

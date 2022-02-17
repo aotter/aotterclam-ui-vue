@@ -12,26 +12,26 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
 import { IClamField } from "./types";
 
 export default Vue.extend({
   props: {
     validationContext: Object,
-    field: Object,
+    field: {
+      type: Object as PropType<IClamField>,
+      required: true,
+    },
   },
   computed: {
-    label() {
-      const field = this.field as IClamField;
-      return field.label || field.name;
+    label(): string {
+      return this.field.label || this.field.name;
     },
-    description() {
-      const field = this.field as IClamField;
-      return field.description;
+    description(): string | undefined {
+      return this.field.description;
     },
-    required() {
-      const field = this.field as IClamField;
-      return field.rules?.includes("required");
+    required(): boolean | undefined {
+      return this.field.rules?.includes("required");
     },
   },
 });

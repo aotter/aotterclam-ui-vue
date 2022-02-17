@@ -16,7 +16,7 @@ export interface IInputStringClamField extends IMetaClamField {
 
 export interface IInputNumberClamField extends IMetaClamField {
     component: 'INPUT'
-    inputTagType?: 'number' | 'range'
+    inputTagType: 'number' | 'range'
     inputTagAttrs?: {
         min?: number
         max?: number
@@ -24,6 +24,29 @@ export interface IInputNumberClamField extends IMetaClamField {
     }
 }
 
+export interface ICheckboxClamField extends IMetaClamField {
+    component: 'INPUT'
+    contentType: 'boolean'
+    inputTagType: 'checkbox'
+}
 
+export interface ICheckboxGroupClamField extends IMetaClamField {
+    component: 'INPUT'
+    contentType: 'string[]' | 'number[]'
+    inputTagType: 'checkbox',
+    options: Option[]
+}
 
-export type IClamField = IInputStringClamField | IInputNumberClamField
+export interface IRadioGroupClamField extends IMetaClamField {
+    component: 'INPUT'
+    contentType: 'string' | 'number'
+    inputTagType: 'radio',
+    options: Option[]
+}
+
+interface Option {
+    text: string
+    value: string | number
+}
+
+export type IClamField = IInputStringClamField | IInputNumberClamField | ICheckboxClamField | ICheckboxGroupClamField | IRadioGroupClamField

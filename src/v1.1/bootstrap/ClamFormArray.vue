@@ -2,12 +2,45 @@
   <div>
     <div class="row my-1">
       <div class="col">
+        <ul class="list-group">
+          <li
+            class="list-group-item"
+            v-for="(data, index) in value"
+            :key="`${field.name}.${index}`"
+          >
+            <div class="d-flex w-100 justify-content-between">
+              <div>
+                {{ data }}
+              </div>
+              <div>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  @click="update(data, index)"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  @click="remove(index)"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row my-1">
+      <div class="col">
         <button type="button" class="btn btn-primary btn-sm" @click="add">
           新增{{ field.label }}
         </button>
       </div>
     </div>
-    <modal ref="modal">
+    <modal ref="modal" @ok="onOk">
       <FieldSet
         :fields="field.fields"
         :value="tmpData"
@@ -20,9 +53,10 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
 import Modal from "./components/common/Modal.vue";
 import FieldSet from "../core/FieldSet.vue";
+import { IClamField } from "./types";
 
 export default Vue.extend({
   components: {
@@ -33,15 +67,15 @@ export default Vue.extend({
     fieldLayoutComponent: [String, Object, Function, Promise],
     fieldContentComponent: [String, Object, Function, Promise],
     arrayContentComponent: [String, Object, Function, Promise],
-    value: [String, Number, Boolean, Object, Array],
+    value: Array,
     field: {
-      type: Object,
+      type: Object as PropType<IClamField>,
       required: true,
     },
   },
   data() {
     return {
-      editIndex: null, // index of the currently editing data
+      editIndex: 0, // index of the currently editing data
       tmpData: {}, // currently working data
       mode: "create", // 'create' or 'update'
     };
@@ -53,8 +87,34 @@ export default Vue.extend({
       this.mode = "create";
       (this.$refs.modal as any).show();
     },
+    update(data: any, index: number) {
+      this.tmpData = JSON.parse(JSON.stringify(data));
+      this.editIndex = index;
+      this.mode = "update";
+      (this.$refs.modal as any).show();
+    },
+    remove(index: number) {
+      const newValArray = [...this.value];
+      newValArray.splice(index, 1);
+      this.$emit("input", newValArray);
+    },
     onInput(data: any) {
       this.tmpData = data;
+    },
+    onOk() {
+      const localData = JSON.parse(JSON.stringify(this.tmpData));
+      const currVal = this.value || [];
+      const newValArray = [...currVal];
+      // create mode
+      if (this.mode === "create") {
+        newValArray.push(localData);
+      }
+      // update mode
+      else {
+        newValArray[this.editIndex] = localData;
+      }
+      this.$emit("input", newValArray);
+      (this.$refs.modal as any).hide();
     },
   },
 });
