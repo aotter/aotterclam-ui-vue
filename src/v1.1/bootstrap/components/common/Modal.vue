@@ -30,14 +30,23 @@
             </div>
             <div class="modal-footer">
               <button
-                class="btn btn-secondary"
+                :class="[
+                  'btn',
+                  `btn-${cancelVariant}`,
+                  cancelSize ? `btn-${cancelSize}` : '',
+                ]"
                 @click.prevent="showModal = !showModal"
-              >
-                {{ cancelTitle }}
-              </button>
-              <button class="btn btn-primary" @click.prevent="$emit('ok')">
-                {{ okTitle }}
-              </button>
+                v-html="cancelHtml"
+              ></button>
+              <button
+                :class="[
+                  'btn',
+                  `btn-${okVariant}`,
+                  okSize ? `btn-${okSize}` : '',
+                ]"
+                @click.prevent="$emit('ok')"
+                v-html="okHtml"
+              ></button>
             </div>
           </div>
         </div>
@@ -54,9 +63,33 @@ export default Vue.extend({
       type: String,
       default: "Cancel",
     },
+    cancelTitleHtml: {
+      type: String,
+      default: null,
+    },
+    cancelVariant: {
+      type: String,
+      default: "secondary",
+    },
+    cancelSize: {
+      type: String,
+      default: null,
+    },
     okTitle: {
       type: String,
       default: "OK",
+    },
+    okTitleHtml: {
+      type: String,
+      default: null,
+    },
+    okVariant: {
+      type: String,
+      default: "primary",
+    },
+    okSize: {
+      type: String,
+      default: null,
     },
     size: {
       type: String,
@@ -71,7 +104,14 @@ export default Vue.extend({
       showModal: false,
     };
   },
-  computed: {},
+  computed: {
+    okHtml(): string {
+      return this.okTitleHtml || this.okTitle;
+    },
+    cancelHtml(): string {
+      return this.cancelTitleHtml || this.cancelTitle;
+    },
+  },
   methods: {
     show() {
       this.showModal = true;

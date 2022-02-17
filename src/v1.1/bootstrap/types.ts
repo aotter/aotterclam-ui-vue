@@ -8,8 +8,26 @@ export interface IMetaClamField extends IBaseClamField {
 
 export interface IArrayClamField extends IMetaClamField {
     component: 'LIST'
-    getTitle?: (data: any) => string
-    getSummary?: (data: any) => string // support line seperator
+    getTitle?: (data: any, index?: number) => string
+    settings?: {
+        create?: ButtonSetting
+        modal?: ModalSetting
+    }
+}
+
+export interface ModalSetting {
+    titleCreate?: string
+    titleUpdate?: string | ((data: any, index?: number) => string)
+    size?: 'xl' | 'lg' | 'md' | 'sm'
+    ok: ButtonSetting
+    cancel: ButtonSetting
+}
+
+export interface ButtonSetting {
+    title?: string
+    titleHtml?: string
+    variant?: string
+    size?: 'lg' | 'sm'
 }
 
 export interface IObjectClamField extends IMetaClamField {

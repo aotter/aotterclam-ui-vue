@@ -139,6 +139,23 @@
                             label: "列表",
                             contentType: "Array",
                             component: "LIST",
+                            getTitle: (data, index) => `${index + 1}. ${data.name}`,
+                            settings: {
+                                create: {
+                                    variant: 'outline-primary',
+                                    titleHtml: `<i class="bi bi-plus-lg"></i> 新增列表`
+                                },
+                                modal: {
+                                    titleCreate: '新增列表',
+                                    titleUpdate: (data) => data.name,
+                                    ok: {
+                                        titleHtml: '<i class="bi bi-check-lg"></i> 確認'
+                                    },
+                                    cancel: {
+                                        titleHtml: '<i class="bi bi-x-lg"></i> 取消'
+                                    },
+                                }
+                            },
                             fields: [
                                 {
                                     name: "name",
