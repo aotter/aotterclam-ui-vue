@@ -8,48 +8,19 @@
         :layout-component="fieldLayoutComponent"
         v-slot="{ validationContext, fieldValue, readonly, disabled }"
       >
-        <template v-if="field.fields && field.fields.length > 0">
-          <template v-if="field.contentType === 'Array'">
-            <component
-              v-if="arrayContentComponent"
-              :is="arrayContentComponent"
-              :field-layout-component="fieldLayoutComponent"
-              :field-content-component="fieldContentComponent"
-              :array-content-component="arrayContentComponent"
-              :field="field"
-              :value="fieldValue"
-              @input="onInput($event, field)"
-            />
-            <span v-else
-              >Missing arrayContentComponent for field {{ field.name }}</span
-            >
-          </template>
-          <template v-else-if="field.contentType === 'Object'">
-            <FieldSet
-              :fields="field.fields"
-              :value="fieldValue"
-              :field-layout-component="fieldLayoutComponent"
-              :field-content-component="fieldContentComponent"
-              :array-content-component="arrayContentComponent"
-              @input="onInput($event, field)"
-            />
-          </template>
-        </template>
-        <template v-else>
-          <component
-            v-if="fieldContentComponent"
-            :is="fieldContentComponent"
-            :field="field"
-            :value="fieldValue"
-            :validation-context="validationContext"
-            :readonly="readonly"
-            :disabled="disabled"
-            @input="onInput($event, field)"
-          />
-          <span v-else
-            >Missing fieldContentComponent for field {{ field.name }}</span
-          >
-        </template>
+        <component
+          v-if="fieldContentComponent"
+          :is="fieldContentComponent"
+          :field="field"
+          :value="fieldValue"
+          :validation-context="validationContext"
+          :readonly="readonly"
+          :disabled="disabled"
+          @input="onInput($event, field)"
+        />
+        <span v-else
+          >Missing fieldContentComponent for field {{ field.name }}</span
+        >
       </Field>
     </template>
   </div>
@@ -67,7 +38,6 @@ export default Vue.extend({
   props: {
     fieldLayoutComponent: [String, Object, Function, Promise],
     fieldContentComponent: [String, Object, Function, Promise],
-    arrayContentComponent: [String, Object, Function, Promise],
     value: [Object, Array],
     fields: {
       type: Array,

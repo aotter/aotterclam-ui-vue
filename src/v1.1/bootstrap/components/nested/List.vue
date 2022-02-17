@@ -12,7 +12,7 @@
               <div>
                 {{ data }}
               </div>
-              <div>
+              <div v-if="!readonly">
                 <button
                   type="button"
                   class="btn btn-outline-secondary btn-sm"
@@ -33,9 +33,14 @@
         </ul>
       </div>
     </div>
-    <div class="row my-1">
+    <div class="row my-1" v-if="!readonly">
       <div class="col">
-        <button type="button" class="btn btn-primary btn-sm" @click="add">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          @click="add"
+          :disabled="disabled"
+        >
           新增{{ field.label }}
         </button>
       </div>
@@ -46,7 +51,6 @@
         :value="tmpData"
         :field-layout-component="fieldLayoutComponent"
         :field-content-component="fieldContentComponent"
-        :array-content-component="arrayContentComponent"
         @input="onInput($event)"
       />
     </modal>
@@ -54,19 +58,20 @@
 </template>
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import Modal from "./components/common/Modal.vue";
-import FieldSet from "../core/FieldSet.vue";
-import { IClamField } from "./types";
+import Modal from "../common/Modal.vue";
+import FieldSet from "../../../core/FieldSet.vue";
+import { IClamField } from "../../types";
+import FormGroup from "../../FormGroup.vue";
+import ClamFormField from "../../ClamFormField.vue";
+import { FieldMixin } from "../mixins";
 
 export default Vue.extend({
+  mixins: [FieldMixin],
   components: {
     Modal,
     FieldSet,
   },
   props: {
-    fieldLayoutComponent: [String, Object, Function, Promise],
-    fieldContentComponent: [String, Object, Function, Promise],
-    arrayContentComponent: [String, Object, Function, Promise],
     value: Array,
     field: {
       type: Object as PropType<IClamField>,
@@ -80,7 +85,14 @@ export default Vue.extend({
       mode: "create", // 'create' or 'update'
     };
   },
-  computed: {},
+  computed: {
+    fieldLayoutComponent(): Function {
+      return FormGroup;
+    },
+    fieldContentComponent(): Function {
+      return ClamFormField;
+    },
+  },
   methods: {
     add() {
       this.tmpData = {};

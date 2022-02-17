@@ -71,25 +71,26 @@
                 fields() {
                     return [
                         {
+                            name: "name",
+                            label: "姓名",
+                            contentType: 'string',
+                            component: "INPUT",
+                            description: "輸入姓名，最多 20 個字",
+                            placeholder: '王大明',
+                            rules: "required",
+                            inputTagAttrs: {
+                                maxlength: 20
+                            }
+                        },
+                        {
                             name: 'gg',
                             label: 'gg',
                             contentType: 'Object',
+                            component: 'OBJECT',
                             fields: [
                                 {
                                     name: "name",
                                     label: "姓名",
-                                    contentType: 'string',
-                                    component: "INPUT",
-                                    description: "輸入姓名，最多 20 個字",
-                                    placeholder: '王大明',
-                                    rules: "required",
-                                    inputTagAttrs: {
-                                        maxlength: 20
-                                    }
-                                },
-                                {
-                                    name: "name2",
-                                    label: "姓名2",
                                     contentType: 'string',
                                     component: "INPUT",
                                     description: "輸入姓名，最多 20 個字",
@@ -115,6 +116,7 @@
                                     name: "qq",
                                     label: "qq",
                                     contentType: 'Object',
+                                    component: 'OBJECT',
                                     fields: [
                                         {
                                             name: "name",
@@ -136,13 +138,7 @@
                             name: "list",
                             label: "列表",
                             contentType: "Array",
-                            getTitle(data) {
-                                return data.name
-                            },
-                            getSummary(data) {
-                                //return null
-                                return data.name + '\n' + data.name
-                            },
+                            component: "LIST",
                             fields: [
                                 {
                                     name: "name",
@@ -160,9 +156,7 @@
                                     name: "listn",
                                     label: "列表",
                                     contentType: "Array",
-                                    getTitle(data) {
-                                        return data.name + ' 巢狀'
-                                    },
+                                    component: "LIST",
                                     fields: [
                                         {
                                             name: "name",

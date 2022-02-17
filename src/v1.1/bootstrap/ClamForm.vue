@@ -5,7 +5,6 @@
     :fields="fields"
     :field-layout-component="fieldLayout"
     :field-content-component="fieldContent"
-    :array-content-component="arrayContent"
     @input="$emit('input', $event)"
     @submit="onSubmit"
   >
@@ -20,7 +19,6 @@ import Vue from "vue";
 import BaseForm from "../core/BaseForm.vue";
 import FormGroup from "./FormGroup.vue";
 import ClamFormField from "./ClamFormField.vue";
-import ClamFormArray from "./ClamFormArray.vue";
 
 export default Vue.extend({
   components: {
@@ -42,9 +40,6 @@ export default Vue.extend({
     fieldContent() {
       // do not allow override the whole component
       return ClamFormField;
-    },
-    arrayContent() {
-      return ClamFormArray;
     },
   },
   methods: {
