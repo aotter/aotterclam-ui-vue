@@ -12,6 +12,11 @@ export interface IArrayClamField extends IMetaClamField {
     getSummary?: (data: any) => string // support line seperator
 }
 
+export interface IObjectClamField extends IMetaClamField {
+    component: 'OBJECT'
+    // 
+}
+
 export interface IInputStringClamField extends IMetaClamField {
     component: 'INPUT'
     inputTagType?: 'text' | 'password' | 'email' | 'url' | 'color' | 'tel' | 'search'
@@ -55,4 +60,4 @@ interface Option {
     value: string | number
 }
 
-export type IClamField = IInputStringClamField | IInputNumberClamField | ICheckboxClamField | ICheckboxGroupClamField | IRadioGroupClamField
+export type IClamField = IArrayClamField | IObjectClamField | IInputStringClamField | IInputNumberClamField | ICheckboxClamField | ICheckboxGroupClamField | IRadioGroupClamField

@@ -60,7 +60,7 @@
 import Vue, { PropType } from "vue";
 import Modal from "../common/Modal.vue";
 import FieldSet from "../../../core/FieldSet.vue";
-import { IClamField } from "../../types";
+import { IArrayClamField } from "../../types";
 import FormGroup from "../../FormGroup.vue";
 import ClamFormField from "../../ClamFormField.vue";
 import { FieldMixin } from "../mixins";
@@ -74,7 +74,7 @@ export default Vue.extend({
   props: {
     value: Array,
     field: {
-      type: Object as PropType<IClamField>,
+      type: Object as PropType<IArrayClamField>,
       required: true,
     },
   },
@@ -94,6 +94,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    getTitle(data: any) {
+      // todo
+    },
     add() {
       this.tmpData = {};
       this.mode = "create";

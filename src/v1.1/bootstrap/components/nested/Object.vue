@@ -2,6 +2,8 @@
   <FieldSet
     :fields="field.fields"
     :value="value"
+    :readonly="readonly"
+    :disabled="disabled"
     :field-layout-component="fieldLayoutComponent"
     :field-content-component="fieldContentComponent"
     @input="$emit('input', $event)"

@@ -19,8 +19,8 @@
           :field="field"
           :value="fieldValue"
           :validation-context="validationContext"
-          :readonly="fieldReadonly"
-          :disabled="fieldDisabled"
+          :readonly="determineReadOnly(fieldReadonly)"
+          :disabled="determineDisabled(fieldDisabled)"
           @input="onInput($event, field)"
         />
         <span v-else
@@ -41,6 +41,14 @@ export default Vue.extend({
     Field,
   },
   props: {
+    readonly: {
+      type: Boolean,
+      default: null,
+    },
+    disabled: {
+      type: Boolean,
+      default: null,
+    },
     fieldLayoutComponent: [String, Object, Function, Promise],
     fieldContentComponent: [String, Object, Function, Promise],
     value: [Object, Array],
@@ -51,6 +59,12 @@ export default Vue.extend({
   methods: {
     onInput(value: any, field: IBaseClamField) {
       this.$emit("input", { ...this.value, [field.name]: value });
+    },
+    determineReadOnly(fieldReadonly: boolean): boolean {
+      return this.readonly ?? fieldReadonly;
+    },
+    determineDisabled(fieldDisabled: boolean): boolean {
+      return this.disabled ?? fieldDisabled;
     },
   },
 });
