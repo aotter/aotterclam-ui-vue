@@ -6,6 +6,12 @@ export interface IMetaClamField extends IBaseClamField {
     placeholder?: string
 }
 
+export interface IArrayClamField extends IMetaClamField {
+    component: 'LIST'
+    getTitle?: (data: any) => string
+    getSummary?: (data: any) => string // support line seperator
+}
+
 export interface IInputStringClamField extends IMetaClamField {
     component: 'INPUT'
     inputTagType?: 'text' | 'password' | 'email' | 'url' | 'color' | 'tel' | 'search'

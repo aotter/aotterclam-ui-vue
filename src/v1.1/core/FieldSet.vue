@@ -6,7 +6,12 @@
         :field="field"
         :value="value"
         :layout-component="fieldLayoutComponent"
-        v-slot="{ validationContext, fieldValue, readonly, disabled }"
+        v-slot="{
+          validationContext,
+          fieldValue,
+          readonly: fieldReadonly,
+          disabled: fieldDisabled,
+        }"
       >
         <component
           v-if="fieldContentComponent"
@@ -14,8 +19,8 @@
           :field="field"
           :value="fieldValue"
           :validation-context="validationContext"
-          :readonly="readonly"
-          :disabled="disabled"
+          :readonly="fieldReadonly"
+          :disabled="fieldDisabled"
           @input="onInput($event, field)"
         />
         <span v-else
