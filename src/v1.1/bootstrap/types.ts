@@ -15,21 +15,6 @@ export interface IArrayClamField extends IMetaClamField {
     }
 }
 
-export interface ModalSetting {
-    titleCreate?: string
-    titleUpdate?: string | ((data: any, index?: number) => string)
-    size?: 'xl' | 'lg' | 'md' | 'sm'
-    ok: ButtonSetting
-    cancel: ButtonSetting
-}
-
-export interface ButtonSetting {
-    title?: string
-    titleHtml?: string
-    variant?: string
-    size?: 'lg' | 'sm'
-}
-
 export interface IObjectClamField extends IMetaClamField {
     component: 'OBJECT'
     settings?: {
@@ -41,7 +26,8 @@ export interface IObjectClamField extends IMetaClamField {
 
 export interface IInputStringClamField extends IMetaClamField {
     component: 'INPUT'
-    inputTagType?: 'text' | 'password' | 'email' | 'url' | 'color' | 'tel' | 'search'
+    contentType: 'string'
+    inputTagType?: 'text' | 'password' | 'email' | 'url' | 'color' | 'tel' | 'search' | 'date' | 'datetime-local' | 'month' | 'time' | 'week'
     inputTagAttrs?: {
         maxlength?: number
     }
@@ -49,6 +35,7 @@ export interface IInputStringClamField extends IMetaClamField {
 
 export interface IInputNumberClamField extends IMetaClamField {
     component: 'INPUT'
+    contentType: 'number'
     inputTagType: 'number' | 'range'
     inputTagAttrs?: {
         min?: number
@@ -77,9 +64,37 @@ export interface IRadioGroupClamField extends IMetaClamField {
     options: Option[]
 }
 
+export type IInputClamField = IInputStringClamField | IInputNumberClamField | ICheckboxClamField | ICheckboxGroupClamField | IRadioGroupClamField
+
+export interface ISelectClamField extends IMetaClamField {
+    component: 'SELECT'
+    contentType: 'string' | 'number'
+    options: Option[]
+}
+
+export interface ITextAreaClamField extends IMetaClamField {
+    component: 'TEXTAREA'
+    contentType: 'string'
+}
+
+export type IClamField = IArrayClamField | IObjectClamField | IInputClamField | ISelectClamField | ITextAreaClamField
+
 interface Option {
     text: string
     value: string | number
 }
 
-export type IClamField = IArrayClamField | IObjectClamField | IInputStringClamField | IInputNumberClamField | ICheckboxClamField | ICheckboxGroupClamField | IRadioGroupClamField
+export interface ModalSetting {
+    titleCreate?: string
+    titleUpdate?: string | ((data: any, index?: number) => string)
+    size?: 'xl' | 'lg' | 'md' | 'sm'
+    ok: ButtonSetting
+    cancel: ButtonSetting
+}
+
+export interface ButtonSetting {
+    title?: string
+    titleHtml?: string
+    variant?: string
+    size?: 'lg' | 'sm'
+}

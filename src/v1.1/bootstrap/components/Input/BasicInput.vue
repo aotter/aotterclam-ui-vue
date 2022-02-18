@@ -11,23 +11,22 @@
   />
 </template>
 <script lang="ts">
-import Vue from "vue";
-import { IClamField } from "../../types";
+import Vue, { PropType } from "vue";
+import { IInputNumberClamField, IInputStringClamField } from "../../types";
 import { FieldMixin } from "../mixins";
 export default Vue.extend({
   mixins: [FieldMixin],
   props: {
     value: [String, Number],
     field: {
-      type: Object,
+      type: Object as PropType<IInputStringClamField | IInputNumberClamField>,
       required: true,
     },
   },
   computed: {
     type(): string {
-      const field = this.field as IClamField;
       // only 'number' and 'string' are possible values here
-      return field.contentType === "number" ? "number" : "text";
+      return this.field.contentType === "number" ? "number" : "text";
     },
   },
   methods: {

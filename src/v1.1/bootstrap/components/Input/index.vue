@@ -13,7 +13,7 @@
 import Vue, { PropType } from "vue";
 import BasicInput from "./BasicInput.vue";
 import { FieldMixin } from "../mixins";
-import { IClamField } from "../../types";
+import { IInputClamField } from "../../types";
 
 export default Vue.extend({
   mixins: [FieldMixin],
@@ -23,15 +23,24 @@ export default Vue.extend({
   props: {
     value: [String, Number],
     field: {
-      type: Object as PropType<IClamField>,
+      type: Object as PropType<IInputClamField>,
       required: true,
     },
   },
   computed: {
     component(): string {
-      // todo dispatch to different components based on field.contentType
-      // see types
-      return "BasicInput";
+      switch (this.field.inputTagType) {
+        case "checkbox":
+          if (this.field.contentType === "boolean") {
+            return "Checkbox";
+          } else {
+            return "CheckboxGroup";
+          }
+        case "radio":
+          return "RadioGroup";
+        default:
+          return "BasicInput";
+      }
     },
   },
   methods: {},
