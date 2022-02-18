@@ -27,8 +27,8 @@ export default Vue.extend({
     OBJECT,
   },
   props: {
-    fieldLayoutComponent: [String, Object, Function, Promise],
-    fieldContentComponent: [String, Object, Function, Promise],
+    fieldLayoutComponent: [String, Object, Function, Promise], // this will prevent circular reference
+    fieldContentComponent: [String, Object, Function, Promise], // this will prevent circular reference
     value: [String, Number, Boolean, Object, Array],
     field: {
       type: Object as PropType<IClamField>,

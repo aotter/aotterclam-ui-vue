@@ -1,6 +1,7 @@
 <template>
   <span>
     <!-- boostrap-vue b-modal is causing Chinese input compositionend event interruption, use hand-crafted modal instead -->
+    <!-- this comonent follows b-modal's convention -->
     <transition
       @enter="startTransitionModal"
       @after-enter="endTransitionModal"

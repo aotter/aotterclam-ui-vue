@@ -40,7 +40,11 @@
       <div class="col">
         <button
           type="button"
-          :class="`btn btn-${createBtn.variant} btn-${createBtn.size}`"
+          :class="[
+            'btn',
+            `btn-${createBtn.variant}`,
+            createBtn.size ? `btn-${createBtn.size}` : '',
+          ]"
           @click="add"
           :disabled="disabled"
           v-html="createBtn.titleHtml"
@@ -78,6 +82,13 @@ import FieldSet from "../../../core/FieldSet.vue";
 import { ButtonSetting, IArrayClamField, ModalSetting } from "../../types";
 import { FieldMixin } from "../mixins";
 
+interface ButtonAttr {
+  title: string;
+  titleHtml: string;
+  variant?: string;
+  size?: string;
+}
+
 export default Vue.extend({
   name: "LIST",
   mixins: [FieldMixin],
@@ -86,8 +97,8 @@ export default Vue.extend({
     FieldSet,
   },
   props: {
-    fieldLayoutComponent: [String, Object, Function, Promise],
-    fieldContentComponent: [String, Object, Function, Promise],
+    fieldLayoutComponent: [String, Object, Function, Promise], // this will prevent circular reference
+    fieldContentComponent: [String, Object, Function, Promise], // this will prevent circular reference
     value: Array,
     field: {
       type: Object as PropType<IArrayClamField>,
@@ -102,20 +113,13 @@ export default Vue.extend({
     };
   },
   computed: {
-    createBtn(): {
-      title: string;
-      titleHtml: string;
-      variant: string;
-      size: string;
-    } {
-      return {
-        ...this.btnTitle(
-          this.field?.settings?.create,
-          `Create ${this.field.label}`
-        ),
-        size: this.field?.settings?.create?.size || "sm",
-        variant: this.field?.settings?.create?.variant || "primary",
-      };
+    createBtn(): ButtonAttr {
+      return this.buildButton(
+        this.field?.settings?.create,
+        `Create ${this.field.label}`,
+        "primary",
+        "sm"
+      );
     },
     modalSetting(): ModalSetting | undefined {
       return this.field.settings?.modal;
@@ -139,43 +143,28 @@ export default Vue.extend({
         ? update(this.tmpData, this.editIndex)
         : update || `Edit ${this.field.label}`;
     },
-    modalCancelBtn(): {
-      title: string;
-      titleHtml: string;
-      variant?: string;
-      size?: string;
-    } {
-      return {
-        ...this.btnTitle(this.modalSetting?.cancel, "Cancel"),
-        variant: this.modalSetting?.cancel?.variant,
-        size: this.modalSetting?.cancel?.size,
-      };
+    modalCancelBtn(): ButtonAttr {
+      return this.buildButton(this.modalSetting?.cancel, "Cancel");
     },
-    modalOkBtn(): {
-      title: string;
-      titleHtml: string;
-      variant?: string;
-      size?: string;
-    } {
-      return {
-        ...this.btnTitle(this.modalSetting?.ok, "OK"),
-        variant: this.modalSetting?.ok?.variant,
-        size: this.modalSetting?.ok?.size,
-      };
+    modalOkBtn(): ButtonAttr {
+      return this.buildButton(this.modalSetting?.ok, "OK");
     },
   },
   methods: {
-    btnTitle(
+    buildButton(
       setting: ButtonSetting | undefined,
-      defaultTitle: string
-    ): { title: string; titleHtml: string } {
+      defaultTitle: string,
+      defaultVariant?: string,
+      defaultSize?: string
+    ): ButtonAttr {
       const title = setting?.title || defaultTitle;
       return {
         title,
         titleHtml: setting?.titleHtml || title,
+        variant: setting?.variant || defaultVariant,
+        size: setting?.size || defaultSize,
       };
     },
-
     getTitle(data: any, index: number) {
       return this.field?.getTitle
         ? this.field?.getTitle(data, index)
