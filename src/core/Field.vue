@@ -24,7 +24,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { IBaseClamField } from "../core/types";
+import { IBaseClamField } from "./types";
 export default Vue.extend({
   props: {
     layoutComponent: [String, Object, Function, Promise],
