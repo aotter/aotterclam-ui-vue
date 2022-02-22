@@ -4,6 +4,8 @@
 
 - Currently this project is private. 
 
+- use node 14 for development
+
 # Installation
 
 1. In your project root, create a file name `.npmrc` with the following content
