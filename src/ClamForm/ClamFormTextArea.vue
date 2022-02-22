@@ -1,52 +1,46 @@
 <template>
   <FormGroup v-bind="$props" v-slot="validationContext">
-    <b-form-textarea
-      id="textarea"
-      :value="value"
-      @input="onInput"
-      :placeholder="_placeholder"
+    <textarea
+      :class="['form-control', getValidationClass(validationContext)]"
       rows="3"
-      :state="getValidationState(validationContext)"
       max-rows="6"
-    ></b-form-textarea>
+      :value="value"
+      :readonly="readonly"
+      :disabled="disabled"
+      @input="onInput($event.target.value)"
+      :placeholder="field.placeholder"
+    ></textarea>
   </FormGroup>
 </template>
 <script lang="ts">
-import { IClamFormField } from "../types";
+import { IClamFormField, IDefaultClamFormField } from "../types";
 import Vue from "vue";
 import FormGroup from "./FormGroup.vue";
-import { BFormTextarea } from "bootstrap-vue";
 
 export default Vue.extend({
   components: {
     FormGroup,
-    BFormTextarea,
   },
-  props: [
-    "value",
-    "field",
-    "placeholder",
-    "label",
-    "rules",
-    "description",
-    "labelCols",
-    "labelColsSm",
-    "labelColsMd",
-    "labelColsLg",
-    "labelColsXl",
-    "labelAlign",
-    "labelAlignSm",
-    "labelAlignMd",
-    "labelAlignLg",
-    "labelAlignXl",
-  ],
-  computed: {
-    _placeholder() {
-      return this.field?.placeholder || this.placeholder;
+  props: {
+    value: String,
+    field: {
+      type: Object as () => IDefaultClamFormField,
+      required: true,
+      validator: (value: IDefaultClamFormField) => {
+        return value.formTagType === "TEXTAREA";
+      },
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
-    getValidationState({
+    getValidationClass({
       dirty,
       validated,
       valid,
@@ -55,7 +49,7 @@ export default Vue.extend({
       validated: boolean;
       valid: boolean;
     }) {
-      return dirty || validated ? valid : null;
+      return dirty || validated ? (valid ? "is-valid" : "is-invalid") : "";
     },
     onInput(value: string) {
       this.$emit("input", value);

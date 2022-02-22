@@ -5,39 +5,45 @@
       :checked="value"
       @input="onInput"
       size="lg"
+      :readonly="readonly"
+      :disabled="disabled"
       :state="getValidationState(validationContext)"
     ></b-form-checkbox>
   </FormGroup>
 </template>
 <script lang="ts">
-import { IClamFormField } from "../types";
+import {
+  IDefaultClamFormField,
+  IInputNumberClamFormField,
+  IInputStringClamFormField,
+} from "../types";
 import Vue from "vue";
 import FormGroup from "./FormGroup.vue";
-import { BFormCheckbox } from "bootstrap-vue";
 
 export default Vue.extend({
   components: {
     FormGroup,
-    BFormCheckbox,
   },
-  // TODO check type must be boolean
-  props: [
-    "value",
-    "field",
-    "label",
-    "rules",
-    "description",
-    "labelCols",
-    "labelColsSm",
-    "labelColsMd",
-    "labelColsLg",
-    "labelColsXl",
-    "labelAlign",
-    "labelAlignSm",
-    "labelAlignMd",
-    "labelAlignLg",
-    "labelAlignXl",
-  ],
+  props: {
+    value: Boolean,
+    field: {
+      type: Object as () =>
+        | IInputStringClamFormField
+        | IInputNumberClamFormField,
+      required: true,
+      validator: (value: IDefaultClamFormField) => {
+        return value.formTagType === "SWITCH";
+      },
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
   methods: {
     getValidationState({
       dirty,

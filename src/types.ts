@@ -3,16 +3,51 @@ export type ClamFormFieldContentType = 'string' | 'number' | 'boolean' | 'Object
 
 interface IBaseClamFormField {
   name: string
+  component?: string
   label?: string
   contentType: ClamFormFieldContentType
   description?: string
   placeholder?: string
   showIf?: (data: any) => boolean
+  readonly?: boolean | ((data: any) => boolean)
+  disabled?: boolean | ((data: any) => boolean)
   rules?: string // vee-validate rules
   fields?: IClamFormField[] // nested fields
 }
 
-interface IOptionsClamFormField extends IBaseClamFormField {
+export interface IArrayClamFormField extends IBaseClamFormField {
+  formTagType: null,
+  contentType: 'Array',
+  getTitle?: (data: any) => string,
+  getSummary?: (data: any) => string, // support line seperator
+  settings?: {
+    modalSize?: 'xl' | 'lg' | 'sm'
+  }
+}
+
+export interface IDefaultClamFormField extends IBaseClamFormField {
+  formTagType: 'DATE' | 'SWITCH' | 'TAGS' | 'TEXTAREA'
+}
+
+export interface IInputStringClamFormField extends IBaseClamFormField {
+  formTagType: 'INPUT'
+  inputTagType?: 'text' | 'password' | 'email' | 'url' | 'color' | 'tel' | 'search'
+  inputTagAttrs?: {
+    maxlength?: number
+  }
+}
+
+export interface IInputNumberClamFormField extends IBaseClamFormField {
+  formTagType: 'INPUT'
+  inputTagType?: 'number' | 'range'
+  inputTagAttrs?: {
+    min?: number
+    max?: number
+    step?: number
+  }
+}
+
+export interface IOptionsClamFormField extends IBaseClamFormField {
   formTagType: 'SELECT' | 'RADIO' | 'CHECKBOXES'
   options?: {
     text: string
@@ -20,18 +55,15 @@ interface IOptionsClamFormField extends IBaseClamFormField {
   }[]
 }
 
-interface IDefaultClamFormField extends IBaseClamFormField {
-  formTagType: 'INPUT' | 'DATE' | 'SWITCH' | 'TAGS' | 'TEXTAREA'
-}
-
-interface IImageClamFormField extends IBaseClamFormField {
+export interface IImageClamFormField extends IBaseClamFormField {
   formTagType: 'IMAGE'
   settings: {
     width: number
     height: number
     displayWidth: string
     acceptImageType: string
+    uploadFunction: (form: FormData) => Promise<string>
   }
 }
 
-export type IClamFormField = IOptionsClamFormField | IDefaultClamFormField | IImageClamFormField
+export type IClamFormField = IOptionsClamFormField | IInputStringClamFormField | IInputNumberClamFormField | IDefaultClamFormField | IImageClamFormField | IArrayClamFormField

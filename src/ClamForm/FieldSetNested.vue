@@ -1,118 +1,127 @@
 <template>
-  <b-card bg-variant="light" no-body>
-    <!-- used in FieldSetArray -->
-    <b-card-header v-if="showHeader" header-tag="header">
-      <b-row class="justify-content-between">
-        <b-col class="ml-2">
-          {{ headerTitle }}
-        </b-col>
-        <b-col class="text-right">
-          <b-button variant="link" size="sm" @click="visible = !visible">
-            <small v-if="!visible"
-              >點擊展開
-              <i class="fas fa-chevron-right"></i>
-            </small>
-            <small v-if="visible"
-              >點擊收合
-              <i class="fas fa-chevron-down"></i>
-            </small>
-          </b-button>
-
-          <b-button
-            variant="outline-secondary"
-            size="sm"
-            @click="$emit('remove')"
-          >
-            <i class="fas fa-times"></i>
-          </b-button>
-        </b-col>
-      </b-row>
-    </b-card-header>
-
-    <b-collapse :id="`collapse_${field.name}`" v-model="visible">
-      <b-card-body>
-        <template v-for="childField in field.fields">
+  <div class="card bg-light">
+    <div class="card-body">
+      <template v-for="childField in field.fields">
+        <template
+          v-if="
+            childField.fields &&
+            childField.fields.length > 0 &&
+            determineShow(childField)
+          "
+        >
+          <template v-if="childField.contentType === 'Object'">
+            <FieldSetNested
+              v-bind="$props"
+              :key="childField.name"
+              :field="childField"
+              :value="getFormDataValue(childField)"
+              @input="onInput($event, childField.name)"
+            />
+          </template>
+          <template v-else-if="childField.contentType === 'Array'">
+            <FieldSetArray
+              v-bind="$props"
+              :key="childField.name"
+              :field="childField"
+              :value="getFormDataValue(childField)"
+              @input="onInput($event, childField.name)"
+            />
+          </template>
+        </template>
+        <template v-else>
           <component
-            :is="`ClamForm_${childField.formTagType}`"
+            :is="getComponentName(childField)"
             :key="`${field.name}.${childField.name}`"
             v-bind="$props"
             :field="childField"
             v-if="determineShow(childField)"
-            :value="getFormDataValue(childField.name)"
+            :readonly="determineReadonly(childField)"
+            :disabled="determineDisabled(childField)"
+            :value="getFormDataValue(childField)"
             @input="onInput($event, childField.name)"
           ></component>
         </template>
-      </b-card-body>
-    </b-collapse>
-  </b-card>
+      </template>
+    </div>
+  </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { IClamFormField } from "../types";
-import {
-  BCard,
-  BCardHeader,
-  BRow,
-  BCol,
-  BCollapse,
-  BCardBody,
-  BButton,
-} from "bootstrap-vue";
-
 import ClamForm_INPUT from "./ClamFormInput.vue";
 import ClamForm_RADIO from "./ClamFormRadioGroup.vue";
-import ClamForm_DATE from "./ClamFormDatePicker.vue";
+//import ClamForm_DATE from "./ClamFormDatePicker.vue";
 import ClamForm_TEXTAREA from "./ClamFormTextArea.vue";
+import ClamForm_SELECT from "./ClamFormSelect.vue";
 import ClamForm_CHECKBOXES from "./ClamFormCheckboxGroup.vue";
 import ClamForm_SWITCH from "./ClamFormSwitch.vue";
 import ClamForm_TAGS from "./ClamFormTag.vue";
 import ClamForm_IMAGE from "./ClamFormCropImageUploader.vue";
+import ClamForm_CUSTOM from "./CustomWrapper.vue";
 
 export default Vue.extend({
+  name: "FieldSetNested",
   components: {
-    BCard,
-    BCardHeader,
-    BButton,
-    BRow,
-    BCol,
-    BCollapse,
-    BCardBody,
+    FieldSetArray: () => import("./FieldSetArray.vue").then((d) => d.default),
     ClamForm_INPUT,
+    ClamForm_SELECT,
     ClamForm_RADIO,
-    ClamForm_DATE,
+    //ClamForm_DATE,
     ClamForm_TEXTAREA,
     ClamForm_CHECKBOXES,
     ClamForm_SWITCH,
     ClamForm_TAGS,
     ClamForm_IMAGE,
+    ClamForm_CUSTOM,
   },
-  props: [
-    "value", // will be an Object
-    "field",
-    "showHeader",
-    "headerTitle",
-    "labelCols",
-    "labelColsSm",
-    "labelColsMd",
-    "labelColsLg",
-    "labelColsXl",
-    "labelAlign",
-    "labelAlignSm",
-    "labelAlignMd",
-    "labelAlignLg",
-    "labelAlignXl",
-  ],
+  props: {
+    value: {
+      type: Object,
+    },
+    field: {
+      type: Object as () => IClamFormField,
+    },
+  },
   data() {
-    return {
-      visible: true,
-    };
+    return {};
   },
   methods: {
+    getComponentName(field: IClamFormField) {
+      return field.component
+        ? "ClamForm_CUSTOM"
+        : `ClamForm_${field.formTagType}`;
+    },
     determineShow(field: IClamFormField) {
       return field.showIf ? field.showIf(this.value) : true;
     },
-    getFormDataValue(name: string) {
-      return this.value ? this.value[name] : null;
+    determineReadonly(field: IClamFormField) {
+      if (field.readonly instanceof Function) {
+        return field.readonly(this.value) || false;
+      } else if (field.readonly != null) {
+        return field.readonly;
+      } else {
+        return false;
+      }
+    },
+    determineDisabled(field: IClamFormField) {
+      if (field.disabled instanceof Function) {
+        return field.disabled(this.value) || false;
+      } else if (field.disabled != null) {
+        return field.disabled;
+      } else {
+        return false;
+      }
+    },
+    getFormDataValue(field: IClamFormField) {
+      const defaultValue =
+        field.contentType === "Object"
+          ? {}
+          : field.contentType === "Array"
+          ? []
+          : null;
+      return this.value && this.value[field.name]
+        ? this.value[field.name]
+        : defaultValue;
     },
     onInput(value: any, name: string) {
       this.$emit("input", { ...this.value, [name]: value });
@@ -120,12 +129,3 @@ export default Vue.extend({
   },
 });
 </script>
-<style scoped>
-.card-header {
-  padding: 0;
-}
-.collapsed > .when-open,
-.not-collapsed > .when-closed {
-  display: none;
-}
-</style>

@@ -1,58 +1,67 @@
 <template>
   <FormGroup v-bind="$props" v-slot="validationContext">
-    <b-form-radio-group
-      :checked="value"
-      @input="onInput"
-      :options="_options"
-      :state="getValidationState(validationContext)"
-    ></b-form-radio-group>
+    <div role="radiogroup" :id="field.name">
+      <div
+        class="custom-control custom-radio custom-control-inline"
+        v-for="(option, index) in field.options"
+        :key="index"
+      >
+        <input
+          type="radio"
+          :class="[
+            'custom-control-input',
+            getValidationClass(validationContext),
+          ]"
+          :value="option.value"
+          :id="`${field.name}_${index}`"
+          :name="field.name"
+          v-model="localValue"
+        />
+
+        <label
+          class="custom-control-label"
+          :for="`${field.name}_${index}`"
+          v-text="option.text"
+        ></label>
+      </div>
+    </div>
   </FormGroup>
 </template>
 <script lang="ts">
-import { IClamFormField } from "../types";
+import { IClamFormField, IOptionsClamFormField } from "../types";
 import Vue from "vue";
 import FormGroup from "./FormGroup.vue";
-import { BFormRadioGroup } from "bootstrap-vue";
 
 export default Vue.extend({
   components: {
     FormGroup,
-    BFormRadioGroup,
   },
-  // TODO: type should be text or number
-  props: [
-    "value",
-    "field",
-    "type",
-    "options",
-    "label",
-    "rules",
-    "description",
-    "labelCols",
-    "labelColsSm",
-    "labelColsMd",
-    "labelColsLg",
-    "labelColsXl",
-    "labelAlign",
-    "labelAlignSm",
-    "labelAlignMd",
-    "labelAlignLg",
-    "labelAlignXl",
-  ],
-  computed: {
-    _type() {
-      return this.field
-        ? this.field?.contentType === "string"
-          ? "text"
-          : "number"
-        : this.type || "text";
+  props: {
+    value: [String, Number],
+    field: {
+      type: Object as () => IOptionsClamFormField,
+      required: true,
+      validator: (value: IOptionsClamFormField) => {
+        return value.formTagType === "RADIO";
+      },
     },
-    _options() {
-      return this.field?.options || this.options;
+  },
+  data() {
+    return {
+      localValue: this.value,
+    };
+  },
+  watch: {
+    localValue(newValue, oldValue) {
+      const v =
+        this.field.contentType === "number"
+          ? new Number(newValue).valueOf()
+          : newValue;
+      this.$emit("input", v);
     },
   },
   methods: {
-    getValidationState({
+    getValidationClass({
       dirty,
       validated,
       valid,
@@ -61,11 +70,7 @@ export default Vue.extend({
       validated: boolean;
       valid: boolean;
     }) {
-      return dirty || validated ? valid : null;
-    },
-    onInput(value: any) {
-      const v = this.type === "number" ? new Number(value).valueOf() : value;
-      this.$emit("input", v);
+      return dirty || validated ? (valid ? "is-valid" : "is-invalid") : "";
     },
   },
 });

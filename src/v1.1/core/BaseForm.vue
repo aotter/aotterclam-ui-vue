@@ -1,46 +1,35 @@
 <template>
-  <ValidationObserver v-slot="{ handleSubmit }">
+  <ValidationObserver v-slot="{ handleSubmit }" slim>
     <form @submit.prevent="handleSubmit(onSubmit)">
       <FieldSet
         v-if="fields && fields.length > 0"
-        v-bind="$props"
+        :fields="fields"
+        :value="value"
+        :field-layout-component="fieldLayoutComponent"
+        :field-content-component="fieldContentComponent"
         @input="$emit('input', $event)"
       />
-       <slot></slot>
+      <slot></slot>
       <button ref="submitbtn" type="submit" style="display: none"></button>
     </form>
   </ValidationObserver>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { IClamFormField } from "../types";
 import FieldSet from "./FieldSet.vue";
-// fixme: i dont think this it the right way to init vee-validate
-// fixme: support i18n error messages
-import {
-  ValidationObserver,
-  ValidationProvider,
-  extend,
-  localize,
-} from "vee-validate";
-import * as rules from "vee-validate/dist/rules";
-Object.keys(rules).forEach((rule) => {
-  const _rules = rules as any;
-  extend(rule, _rules[rule]);
-});
-Vue.component("ValidationObserver", ValidationObserver);
-Vue.component("ValidationProvider", ValidationProvider);
 
 export default Vue.extend({
   components: {
     FieldSet,
   },
-  props:{
+  props: {
+    fieldLayoutComponent: [String, Object, Function, Promise],
+    fieldContentComponent: [String, Object, Function, Promise],
     value: {
       type: Object,
     },
     fields: {
-      type: Array as () => IClamFormField[],
+      type: Array,
     },
   },
   methods: {

@@ -1,50 +1,50 @@
 <template>
   <div>
     <template v-for="field in fields">
-      <template v-if="field.fields && field.fields.length > 0">
-        <b-form-group
-          :key="field.name"
-          :label="field.label"
-          label-for=""
-          :label-cols="labelCols"
-          :label-cols-sm="labelColsSm"
-          :label-cols-md="labelColsMd"
-          :label-cols-lg="labelColsLg"
-          :label-cols-xl="labelColsXl"
-          :label-align="labelAlign"
-          :label-align-sm="labelAlignSm"
-          :label-align-md="labelAlignMd"
-          :label-align-lg="labelAlignLg"
-          :label-align-xl="labelAlignXl"
-          :description="field.description"
-        >
-          <template v-if="field.contentType === 'Object'">
-            <FieldSetNested
-              v-bind="$props"
-              :key="field.name"
-              :field="field"
-              :value="getFormDataValue(field)"
-              @input="onInput($event, field.name)"
-            />
-          </template>
-          <template v-else-if="field.contentType === 'Array'">
-            <FieldSetArray
-              v-bind="$props"
-              :key="field.name"
-              :field="field"
-              :value="getFormDataValue(field)"
-              @input="onInput($event, field.name)"
-            />
-          </template>
-        </b-form-group>
+      <template
+        v-if="field.fields && field.fields.length > 0 && determineShow(field)"
+      >
+        <div class="form-group row" :key="field.name">
+          <label
+            for=""
+            class="col-sm-2 col-form-label text-md-right"
+            v-text="field.label"
+          ></label>
+          <div class="col-sm-10">
+            <template v-if="field.contentType === 'Object'">
+              <FieldSetNested
+                v-bind="$props"
+                :key="field.name"
+                :field="field"
+                :value="getFormDataValue(field)"
+                @input="onInput($event, field.name)"
+              />
+            </template>
+            <template v-else-if="field.contentType === 'Array'">
+              <FieldSetArray
+                v-bind="$props"
+                :key="field.name"
+                :field="field"
+                :value="getFormDataValue(field)"
+                @input="onInput($event, field.name)"
+              />
+            </template>
+            <small
+              class="form-text text-muted"
+              v-text="field.description"
+            ></small>
+          </div>
+        </div>
       </template>
       <template v-else>
         <component
-          :is="`ClamForm_${field.formTagType}`"
+          :is="getComponentName(field)"
           :key="field.name"
           v-if="determineShow(field)"
           v-bind="$props"
           :field="field"
+          :readonly="determineReadonly(field)"
+          :disabled="determineDisabled(field)"
           :value="getFormDataValue(field)"
           @input="onInput($event, field.name)"
         ></component>
@@ -59,46 +59,65 @@ import FieldSetNested from "./FieldSetNested.vue";
 import FieldSetArray from "./FieldSetArray.vue";
 import ClamForm_INPUT from "./ClamFormInput.vue";
 import ClamForm_RADIO from "./ClamFormRadioGroup.vue";
-import ClamForm_DATE from "./ClamFormDatePicker.vue";
+//import ClamForm_DATE from "./ClamFormDatePicker.vue";
 import ClamForm_TEXTAREA from "./ClamFormTextArea.vue";
+import ClamForm_SELECT from "./ClamFormSelect.vue";
 import ClamForm_CHECKBOXES from "./ClamFormCheckboxGroup.vue";
 import ClamForm_SWITCH from "./ClamFormSwitch.vue";
 import ClamForm_TAGS from "./ClamFormTag.vue";
 import ClamForm_IMAGE from "./ClamFormCropImageUploader.vue";
-
-import { BFormGroup } from "bootstrap-vue";
+import ClamForm_CUSTOM from "./CustomWrapper.vue";
 
 export default Vue.extend({
+  name: "FieldSet",
   components: {
-    BFormGroup,
     FieldSetNested,
     FieldSetArray,
     ClamForm_INPUT,
     ClamForm_RADIO,
-    ClamForm_DATE,
+    ClamForm_SELECT,
+    //ClamForm_DATE,
     ClamForm_TEXTAREA,
     ClamForm_CHECKBOXES,
     ClamForm_SWITCH,
     ClamForm_TAGS,
     ClamForm_IMAGE,
+    ClamForm_CUSTOM,
   },
-  props: [
-    "value",
-    "fields",
-    "labelCols",
-    "labelColsSm",
-    "labelColsMd",
-    "labelColsLg",
-    "labelColsXl",
-    "labelAlign",
-    "labelAlignSm",
-    "labelAlignMd",
-    "labelAlignLg",
-    "labelAlignXl",
-  ],
+  props: {
+    value: {
+      type: Object,
+    },
+    fields: {
+      type: Array as () => IClamFormField[],
+    },
+  },
   methods: {
+    getComponentName(field: IClamFormField) {
+      return field.component
+        ? "ClamForm_CUSTOM"
+        : `ClamForm_${field.formTagType}`;
+    },
     determineShow(field: IClamFormField) {
       return field.showIf ? field.showIf(this.value) : true;
+    },
+    determineReadonly(field: IClamFormField) {
+      if (field.readonly instanceof Function) {
+        return field.readonly(this.value) || false;
+      } else if (field.readonly != null) {
+        return field.readonly;
+      } else {
+        return false;
+      }
+    },
+    determineDisabled(field: IClamFormField) {
+      if (field.disabled instanceof Function) {
+        return field.disabled(this.value) || false;
+      } else if (field.disabled != null) {
+        return field.disabled;
+      } else {
+        return false;
+      }
     },
     getFormDataValue(field: IClamFormField) {
       const defaultValue =
