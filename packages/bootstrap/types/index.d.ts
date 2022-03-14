@@ -1,4 +1,4 @@
-import { IBaseClamField } from '../core/types'
+import { IBaseClamField } from '@aotter/aotterclam-ui-vue-core/types'
 
 export interface IMetaClamField extends IBaseClamField {
   label?: string
@@ -7,7 +7,7 @@ export interface IMetaClamField extends IBaseClamField {
 }
 
 export interface IArrayClamField extends IMetaClamField {
-  component: 'NestedList'
+  component: 'NestedInput'
   getTitle?: (data: any, index?: number) => string
   settings?: {
     create?: ButtonSetting
@@ -46,7 +46,7 @@ export interface IInputStringClamField extends IMetaClamField {
 }
 
 export interface IInputNumberClamField extends IMetaClamField {
-  component: 'INPUT'
+  component: 'Input'
   contentType: 'number'
   inputTagType: 'number' | 'range'
   inputTagAttrs?: {
@@ -57,20 +57,20 @@ export interface IInputNumberClamField extends IMetaClamField {
 }
 
 export interface ICheckboxClamField extends IMetaClamField {
-  component: 'INPUT'
+  component: 'Input'
   contentType: 'boolean'
   inputTagType: 'checkbox'
 }
 
 export interface ICheckboxGroupClamField extends IMetaClamField {
-  component: 'INPUT'
+  component: 'Input'
   contentType: 'string[]' | 'number[]'
   inputTagType: 'checkbox'
   options: Option[]
 }
 
 export interface IRadioGroupClamField extends IMetaClamField {
-  component: 'INPUT'
+  component: 'Input'
   contentType: 'string' | 'number'
   inputTagType: 'radio'
   options: Option[]

@@ -1,0 +1,27 @@
+{
+  "name": "@aotter/aotterclam-ui-vue-core",
+  "version": "0.1.0",
+  "main": "index.js",
+  "module": "dist/core.esm.js",
+  "types": "dist/core.d.ts",
+  "files": [
+    "dist",
+    "index.js",
+    "index.mjs"
+  ],
+  "buildOptions": {
+    "name": "AotterClamUiCore",
+    "formats": [
+      "cjs",
+      "esm",
+      "global"
+    ],
+    "globals": {
+      "@vue/composition-api": "VueCompositionAPI"
+    }
+  },
+  "peerDependencies": {
+    "vue": "^2.6.11",
+    "@vue/composition-api": "^1.4.9"
+  }
+}
