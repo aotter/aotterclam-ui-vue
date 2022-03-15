@@ -8,7 +8,12 @@
       @before-leave="endTransitionModal"
       @after-leave="startTransitionModal"
     >
-      <div class="modal fade" v-if="showModal" ref="modal">
+      <div
+        class="modal fade"
+        v-if="showModal"
+        :style="{ display: showModal ? 'block' : 'none' }"
+        ref="modal"
+      >
         <div
           :class="`modal-dialog modal-dialog-scrollable modal-${size}`"
           role="document"
@@ -60,6 +65,7 @@
 import { computed, defineComponent, ref } from '@vue/composition-api'
 
 export default defineComponent({
+  name: 'BootstrapModal',
   props: {
     cancelTitle: {
       type: String,
@@ -124,13 +130,13 @@ export default defineComponent({
     }
 
     function startTransitionModal() {
-      backdrop.value?.classList.toggle('d-block')
-      modal.value?.classList.toggle('d-block')
+      backdrop.value?.classList?.toggle('d-block')
+      modal.value?.classList?.toggle('d-block')
     }
 
     function endTransitionModal() {
-      backdrop.value?.classList.toggle('show')
-      modal.value?.classList.toggle('show')
+      backdrop.value?.classList?.toggle('show')
+      modal.value?.classList?.toggle('show')
     }
 
     return {

@@ -12,12 +12,12 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@vue/composition-api'
-import { FieldMixin } from '../mixins'
-import { IInputStringClamField, IInputNumberClamField } from '../../../types'
+import { IInputStringClamField, IInputNumberClamField } from '../../types'
+import { withProps, useField } from '../composables/useField'
 
 export default defineComponent({
-  mixins: [FieldMixin],
   props: {
+    ...withProps(),
     value: [String, Number],
     field: {
       type: Object as PropType<IInputStringClamField | IInputNumberClamField>,
@@ -25,6 +25,8 @@ export default defineComponent({
     }
   },
   setup(props, ctx) {
+    const { getValidationClass } = useField()
+
     // only 'number' and 'string' are possible values here
     const type = computed(() =>
       props.field.contentType === 'number' ? 'number' : 'text'
@@ -37,7 +39,8 @@ export default defineComponent({
 
     return {
       type,
-      onInput
+      onInput,
+      getValidationClass
     }
   }
 })

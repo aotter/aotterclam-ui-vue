@@ -5,13 +5,15 @@
   "private": "true",
   "scripts": {
     "dev": "node scripts/dev.js",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "example": "pnpm serve --filter 'aotterclam-ui-vue-cli'"
   },
   "dependencies": {
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
+    "@microsoft/api-extractor": "^7.19.4",
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@vue/composition-api": "^1.4.9",

@@ -16,6 +16,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "removeComments": false,
+    "declarationMap": true,
     "rootDir": ".",
     "paths": {
       "@aotter/aotterclam-ui-vue-core": ["packages/core/src"],

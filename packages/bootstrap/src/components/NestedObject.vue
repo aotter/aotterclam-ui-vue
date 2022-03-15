@@ -21,18 +21,16 @@
   </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { computed, defineComponent, PropType } from '@vue/composition-api'
 import { FieldSet } from '@aotter/aotterclam-ui-vue-core'
-import { IObjectClamField } from '../../../types'
-import { FieldMixin } from '../mixins'
+import { withProps } from '../composables/useField'
+import { IObjectClamField } from '../../types'
 
-export default Vue.extend({
+export default defineComponent({
   name: 'NestedObject',
-  mixins: [FieldMixin],
-  components: {
-    FieldSet
-  },
+  components: { FieldSet },
   props: {
+    ...withProps(),
     fieldLayoutComponent: [String, Object, Function, Promise], // this will prevent circular reference
     fieldContentComponent: [String, Object, Function, Promise], // this will prevent circular reference
     value: Object,
@@ -41,17 +39,16 @@ export default Vue.extend({
       required: true
     }
   },
-  computed: {
-    textVariant(): string | undefined {
-      return this.field.settings?.textVariant
-    },
-    bgVariant(): string | undefined {
-      return this.field.settings?.bgVariant
-    },
-    borderVariant(): string | undefined {
-      return this.field.settings?.borderVariant
+  setup(props) {
+    const textVariant = computed(() => props.field.settings?.textVariant)
+    const bgVariant = computed(() => props.field.settings?.bgVariant)
+    const borderVariant = computed(() => props.field.settings?.borderVariant)
+
+    return {
+      textVariant,
+      bgVariant,
+      borderVariant
     }
-  },
-  methods: {}
+  }
 })
 </script>

@@ -12,15 +12,15 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@vue/composition-api'
 import BasicInput from './BasicInput.vue'
-import { FieldMixin } from '../mixins'
-import { IInputClamField } from '../../../types'
+import { IInputClamField } from '../../types'
+import { withProps } from '../composables/useField'
 
 export default defineComponent({
-  mixins: [FieldMixin],
   components: {
     BasicInput
   },
   props: {
+    ...withProps(),
     value: [String, Number],
     field: {
       type: Object as PropType<IInputClamField>,

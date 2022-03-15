@@ -13,21 +13,21 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@vue/composition-api'
-import { FieldMixin } from './components/mixins'
 import { IClamField } from '../types'
 
-import Input from './components/Input/index.vue'
-import NextedList from './components/nested/List.vue'
-import NestedObject from './components/nested/Object.vue'
+import Input from './components/Input.vue'
+import NestedList from './components/NestedList.vue'
+import NestedObject from './components/NestedObject.vue'
+import { withProps } from './composables/useField'
 
 export default defineComponent({
-  mixins: [FieldMixin],
   components: {
     Input,
-    NextedList,
+    NestedList,
     NestedObject
   },
   props: {
+    ...withProps(),
     fieldLayoutComponent: [String, Object, Function, Promise], // this will prevent circular reference
     fieldContentComponent: [String, Object, Function, Promise], // this will prevent circular reference
     value: [String, Number, Boolean, Object, Array, InputEvent],

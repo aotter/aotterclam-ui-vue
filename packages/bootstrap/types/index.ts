@@ -120,3 +120,10 @@ export interface ButtonSetting {
   variant?: string
   size?: 'lg' | 'sm'
 }
+
+export interface ButtonAttr {
+  title: string
+  titleHtml: string
+  variant?: string
+  size?: string
+}

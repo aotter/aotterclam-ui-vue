@@ -76,87 +76,77 @@
   </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
-import Modal from '../common/Modal.vue'
+import {
+  computed,
+  PropType,
+  ref,
+  defineComponent,
+  Data
+} from '@vue/composition-api'
+import Modal from './Modal.vue'
 import { FieldSet } from '@aotter/aotterclam-ui-vue-core'
-import { ButtonSetting, IArrayClamField, ModalSetting } from '../../../types'
-import { FieldMixin } from '../mixins'
+import { withProps } from '../composables/useField'
+import { ButtonSetting, IArrayClamField } from '../../types'
 
-interface ButtonAttr {
-  title: string
-  titleHtml: string
-  variant?: string
-  size?: string
-}
-
-export default Vue.extend({
+export default defineComponent({
   name: 'NestedList',
-  mixins: [FieldMixin],
   components: {
     Modal,
     FieldSet
   },
   props: {
+    ...withProps(),
     fieldLayoutComponent: [String, Object, Function, Promise], // this will prevent circular reference
     fieldContentComponent: [String, Object, Function, Promise], // this will prevent circular reference
-    value: Array,
+    value: {
+      type: Array,
+      default: () => []
+    },
     field: {
       type: Object as PropType<IArrayClamField>,
       required: true
     }
   },
-  data() {
-    return {
-      editIndex: 0, // index of the currently editing data
-      tmpData: {}, // currently working data
-      mode: 'create' // 'create' or 'update'
-    }
-  },
-  computed: {
-    createBtn(): ButtonAttr {
-      return this.buildButton(
-        this.field?.settings?.create,
-        `Create ${this.field.label}`,
+  setup(props, ctx) {
+    const modal = ref()
+    const editIndex = ref(0)
+    const tmpData = ref<Data>({})
+    const mode = ref('create')
+
+    const createBtn = computed(() =>
+      buildButton(
+        props.field?.settings?.create,
+        `Create ${props.field.label}`,
         'primary',
         'sm'
       )
-    },
-    modalSetting(): ModalSetting | undefined {
-      return this.field.settings?.modal
-    },
-    modalSize(): 'xl' | 'lg' | 'md' | 'sm' | undefined {
-      return this.modalSetting?.size
-    },
-    modalTitle(): string {
-      if (this.mode === 'create') {
-        return this.modalTitleCreate
-      } else {
-        return this.modalTitleUpdate
-      }
-    },
-    modalTitleCreate(): string {
-      return this.modalSetting?.titleCreate || this.createBtn.title
-    },
-    modalTitleUpdate(): string {
-      const update = this.modalSetting?.titleUpdate
+    )
+
+    const modalSetting = computed(() => props.field.settings?.modal)
+    const modalSize = computed(() => modalSetting.value?.size)
+    const modalTitleCreate = computed(
+      () => modalSetting.value?.titleCreate || createBtn.value.title
+    )
+    const modalTitleUpdate = computed(() => {
+      const update = modalSetting.value?.titleUpdate
       return update && update instanceof Function
-        ? update(this.tmpData, this.editIndex)
-        : update || `Edit ${this.field.label}`
-    },
-    modalCancelBtn(): ButtonAttr {
-      return this.buildButton(this.modalSetting?.cancel, 'Cancel')
-    },
-    modalOkBtn(): ButtonAttr {
-      return this.buildButton(this.modalSetting?.ok, 'OK')
-    }
-  },
-  methods: {
-    buildButton(
+        ? update(tmpData.value, editIndex.value)
+        : update || `Edit ${props.field.label}`
+    })
+    const modalTitle = computed(() =>
+      mode.value === 'create' ? modalTitleCreate.value : modalTitleUpdate.value
+    )
+    const modalCancelBtn = computed(() =>
+      buildButton(modalSetting.value?.cancel, 'Cancel')
+    )
+    const modalOkBtn = computed(() => buildButton(modalSetting.value?.ok, 'OK'))
+
+    function buildButton(
       setting: ButtonSetting | undefined,
       defaultTitle: string,
       defaultVariant?: string,
       defaultSize?: string
-    ): ButtonAttr {
+    ) {
       const title = setting?.title || defaultTitle
       return {
         title,
@@ -164,45 +154,70 @@ export default Vue.extend({
         variant: setting?.variant || defaultVariant,
         size: setting?.size || defaultSize
       }
-    },
-    getTitle(data: any, index: number) {
-      return this.field?.getTitle
-        ? this.field?.getTitle(data, index)
-        : `${this.field.label} #${index + 1}`
-    },
-    add() {
-      this.tmpData = {}
-      this.mode = 'create'
-      ;(this.$refs.modal as any).show()
-    },
-    update(data: any, index: number) {
-      this.tmpData = JSON.parse(JSON.stringify(data))
-      this.editIndex = index
-      this.mode = 'update'
-      ;(this.$refs.modal as any).show()
-    },
-    remove(index: number) {
-      const newValArray = [...this.value]
+    }
+
+    function getTitle(data: any, index: number) {
+      return props.field?.getTitle
+        ? props.field?.getTitle(data, index)
+        : `${props.field.label} #${index + 1}`
+    }
+
+    function add() {
+      tmpData.value = {}
+      mode.value = 'create'
+      modal.value.show()
+    }
+
+    function update(data: any, index: number) {
+      tmpData.value = JSON.parse(JSON.stringify(data))
+      editIndex.value = index
+      mode.value = 'update'
+      modal.value.show()
+    }
+
+    function remove(index: number) {
+      const newValArray = [...props.value]
       newValArray.splice(index, 1)
-      this.$emit('input', newValArray)
-    },
-    onInput(data: any) {
-      this.tmpData = data
-    },
-    onOk() {
-      const localData = JSON.parse(JSON.stringify(this.tmpData))
-      const currVal = this.value || []
+      ctx.emit('input', newValArray)
+    }
+
+    function onInput(data: any) {
+      tmpData.value = data
+    }
+
+    function onOk() {
+      const localData = JSON.parse(JSON.stringify(tmpData.value))
+      const currVal = props.value || []
       const newValArray = [...currVal]
       // create mode
-      if (this.mode === 'create') {
+      if (mode.value === 'create') {
         newValArray.push(localData)
       }
       // update mode
       else {
-        newValArray[this.editIndex] = localData
+        newValArray[editIndex.value] = localData
       }
-      this.$emit('input', newValArray)
-      ;(this.$refs.modal as any).hide()
+      ctx.emit('input', newValArray)
+      modal.value.hide()
+    }
+
+    return {
+      modal,
+      editIndex,
+      tmpData,
+      mode,
+      createBtn,
+      modalSetting,
+      modalSize,
+      modalTitle,
+      modalCancelBtn,
+      modalOkBtn,
+      getTitle,
+      add,
+      update,
+      remove,
+      onInput,
+      onOk
     }
   }
 })
