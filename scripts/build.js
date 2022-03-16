@@ -167,10 +167,7 @@ function checkAllSizes(targets) {
 
 function checkSize(target) {
   const pkgDir = path.resolve(`packages/${target}`)
-  checkFileSize(`${pkgDir}/dist/${target}.global.prod.js`)
-  if (!formats || formats.includes('global-runtime')) {
-    checkFileSize(`${pkgDir}/dist/${target}.runtime.global.prod.js`)
-  }
+  checkFileSize(`${pkgDir}/dist/${target}.global.js`)
 }
 
 function checkFileSize(filePath) {

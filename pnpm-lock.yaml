@@ -15,7 +15,9 @@ importers:
       esbuild-vue: ^1.2.1
       execa: ^4.0.2
       minimist: ^1.2.5
+      postcss: ^8.4.11
       rollup: ^2.23.1
+      rollup-plugin-polyfill-node: ^0.8.0
       rollup-plugin-terser: ^7.0.2
       rollup-plugin-typescript2: ^0.27.2
       rollup-plugin-vue: ^5.1.6
@@ -39,10 +41,12 @@ importers:
       esbuild-vue: 1.2.1_vue-template-compiler@2.6.14
       execa: 4.1.0
       minimist: 1.2.5
+      postcss: 8.4.11
       rollup: 2.70.0
+      rollup-plugin-polyfill-node: 0.8.0_rollup@2.70.0
       rollup-plugin-terser: 7.0.2_rollup@2.70.0
       rollup-plugin-typescript2: 0.27.3_rollup@2.70.0+typescript@3.9.10
-      rollup-plugin-vue: 5.1.9_vue-template-compiler@2.6.14
+      rollup-plugin-vue: 5.1.9_d3be88a907a1fd08634a2a56bbfd95ae
       tslib: 2.3.1
       typescript: 3.9.10
       vee-validate: 3.4.14_vue@2.6.14
@@ -60,6 +64,7 @@ importers:
       '@vue/cli-service': ~5.0.0
       '@vue/composition-api': ^1.4.9
       '@vue/eslint-config-typescript': ^9.1.0
+      bootstrap: ^4.5.3
       core-js: ^3.8.3
       eslint: ^7.32.0
       eslint-config-prettier: ^8.3.0
@@ -72,6 +77,7 @@ importers:
       vue-template-compiler: ^2.6.14
     dependencies:
       '@aotter/aotterclam-ui-vue-bootstrap': link:../../packages/bootstrap
+      bootstrap: 4.6.1
       core-js: 3.21.1
       vee-validate: 3.4.14_vue@2.6.14
       vue: 2.6.14
@@ -95,10 +101,8 @@ importers:
   packages/bootstrap:
     specifiers:
       '@aotter/aotterclam-ui-vue-core': ^0.1.0
-      bootstrap: ^4.5.3
     dependencies:
       '@aotter/aotterclam-ui-vue-core': link:../core
-      bootstrap: 4.6.1
 
   packages/core:
     specifiers: {}
@@ -1467,6 +1471,17 @@ packages:
       rollup: 2.70.0
     dev: true
 
+  /@rollup/plugin-inject/4.0.4_rollup@2.70.0:
+    resolution: {integrity: sha512-4pbcU4J/nS+zuHk+c+OL3WtmEQhqxlZ9uqfjQMQDOHOPld7PsCd8k5LWs8h5wjwJN7MgnAn768F2sDxEP4eNFQ==}
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0
+    dependencies:
+      '@rollup/pluginutils': 3.1.0_rollup@2.70.0
+      estree-walker: 2.0.2
+      magic-string: 0.25.9
+      rollup: 2.70.0
+    dev: true
+
   /@rollup/plugin-node-resolve/8.4.0_rollup@2.70.0:
     resolution: {integrity: sha512-LFqKdRLn0ShtQyf6SBYO69bGE1upV6wUhBX0vFOUnLAyzx5cwp8svA0eHUnu8+YU57XOkrMtfG63QOpQx25pHQ==}
     engines: {node: '>= 8.0.0'}
@@ -2234,7 +2249,7 @@ packages:
       prettier: 2.5.1
     dev: true
 
-  /@vue/component-compiler/4.2.4_92aea8c7c394efd135d49e011136ab24:
+  /@vue/component-compiler/4.2.4_d3be88a907a1fd08634a2a56bbfd95ae:
     resolution: {integrity: sha512-tFGw3h3+nxiqnyborwWQ+rUgKAwSFl0Sdg+BCZkWTyFfkEF5fqunTNoklEUDdtRQMmVqsajn1pOZdm0zh4Uicw==}
     peerDependencies:
       postcss: '>=6.0'
@@ -2243,26 +2258,7 @@ packages:
       '@vue/component-compiler-utils': 3.3.0
       clean-css: 4.2.4
       hash-sum: 1.0.2
-      postcss: 8.4.8
-      postcss-modules-sync: 1.0.0
-      source-map: 0.6.1
-      vue-template-compiler: 2.6.14
-    optionalDependencies:
-      less: 3.13.1
-      pug: 3.0.2
-      sass: 1.49.9
-      stylus: 0.54.8
-    dev: true
-
-  /@vue/component-compiler/4.2.4_vue-template-compiler@2.6.14:
-    resolution: {integrity: sha512-tFGw3h3+nxiqnyborwWQ+rUgKAwSFl0Sdg+BCZkWTyFfkEF5fqunTNoklEUDdtRQMmVqsajn1pOZdm0zh4Uicw==}
-    peerDependencies:
-      postcss: '>=6.0'
-      vue-template-compiler: '*'
-    dependencies:
-      '@vue/component-compiler-utils': 3.3.0
-      clean-css: 4.2.4
-      hash-sum: 1.0.2
+      postcss: 8.4.11
       postcss-modules-sync: 1.0.0
       source-map: 0.6.1
       vue-template-compiler: 2.6.14
@@ -4023,10 +4019,10 @@ packages:
     peerDependencies:
       vue-template-compiler: ^2.6.12
     dependencies:
-      '@vue/component-compiler': 4.2.4_92aea8c7c394efd135d49e011136ab24
+      '@vue/component-compiler': 4.2.4_d3be88a907a1fd08634a2a56bbfd95ae
       lodash.escaperegexp: 4.1.2
       piscina: 2.2.0
-      postcss: 8.4.8
+      postcss: 8.4.11
       vue-template-compiler: 2.6.14
     dev: true
 
@@ -4312,6 +4308,10 @@ packages:
 
   /estree-walker/1.0.1:
     resolution: {integrity: sha512-1fMXF3YP4pZZVozF8j/ZLfvnR8NSIljt56UhbZ5PeeDmmGHpgpdwQt7ITlGvYaQukCvuBRMLEiKiYC+oeIg4cg==}
+    dev: true
+
+  /estree-walker/2.0.2:
+    resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
     dev: true
 
   /esutils/2.0.3:
@@ -6695,6 +6695,15 @@ packages:
       source-map: 0.6.1
     dev: true
 
+  /postcss/8.4.11:
+    resolution: {integrity: sha512-D+jFLnT0ilGfy4CVBGbC+XE68HkVpT8+CUkDrcSpgxmo4RKco2uaZ4kIoyVGEm+m8KN/+Vwgs8MtpNbQ3/ma9w==}
+    engines: {node: ^10 || ^12 || >=14}
+    dependencies:
+      nanoid: 3.3.1
+      picocolors: 1.0.0
+      source-map-js: 1.0.2
+    dev: true
+
   /postcss/8.4.8:
     resolution: {integrity: sha512-2tXEqGxrjvAO6U+CJzDL2Fk2kPHTv1jQsYkSoMeOis2SsYaXRO2COxTdQp99cYvif9JTXaAk9lYGc3VhJt7JPQ==}
     engines: {node: ^10 || ^12 || >=14}
@@ -7154,6 +7163,15 @@ packages:
       rollup-plugin-inject: 3.0.2
     dev: true
 
+  /rollup-plugin-polyfill-node/0.8.0_rollup@2.70.0:
+    resolution: {integrity: sha512-C4UeKedOmOBkB3FgR+z/v9kzRwV1Q/H8xWs1u1+CNe4XOV6hINfOrcO+TredKxYvopCmr+WKUSNsFUnD1RLHgQ==}
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0
+    dependencies:
+      '@rollup/plugin-inject': 4.0.4_rollup@2.70.0
+      rollup: 2.70.0
+    dev: true
+
   /rollup-plugin-terser/7.0.2_rollup@2.70.0:
     resolution: {integrity: sha512-w3iIaU4OxcF52UUXiZNsNeuXIMDvFrr+ZXK6bFZ0Q60qyVfq4uLptoS4bbq3paG3x216eQllFZX7zt6TIImguQ==}
     peerDependencies:
@@ -7181,12 +7199,12 @@ packages:
       typescript: 3.9.10
     dev: true
 
-  /rollup-plugin-vue/5.1.9_vue-template-compiler@2.6.14:
+  /rollup-plugin-vue/5.1.9_d3be88a907a1fd08634a2a56bbfd95ae:
     resolution: {integrity: sha512-DXzrBUD2j68Y6nls4MmuJsFL1SrQDpdgjxvhk/oy04LzJmXJoX1x31yLEBFkkmvpbon6Q885WJLvEMiMyT+3rA==}
     peerDependencies:
       vue-template-compiler: '*'
     dependencies:
-      '@vue/component-compiler': 4.2.4_vue-template-compiler@2.6.14
+      '@vue/component-compiler': 4.2.4_d3be88a907a1fd08634a2a56bbfd95ae
       '@vue/component-compiler-utils': 3.3.0
       debug: 4.3.3
       hash-sum: 1.0.2

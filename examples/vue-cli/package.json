@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@aotter/aotterclam-ui-vue-bootstrap": "workspace:^0.1.0",
+    "bootstrap": "^4.5.3",
     "core-js": "^3.8.3",
     "vee-validate": "3",
     "vue": "^2.6.14"
