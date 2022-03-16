@@ -15,7 +15,7 @@
   </ValidationObserver>
 </template>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 import FieldSet from './FieldSet.vue'
 
 export default defineComponent({
@@ -34,10 +34,11 @@ export default defineComponent({
     }
   },
   setup(_, ctx) {
+    const submitbtn = ref()
     // a small hack to invoke handleSubmit function of ValidationObserver
     // otherwise submit the form directly will bypass ValidationObserver check
     function submit() {
-      ;(ctx.refs['submitbtn'] as any).click()
+      submitbtn.value.click()
     }
 
     function onSubmit() {

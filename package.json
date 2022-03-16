@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/dev.js",
     "build": "node scripts/build.js",
-    "example": "pnpm serve --filter 'aotterclam-ui-vue-cli'"
+    "test:vue-cli": "pnpm serve --filter 'vue-cli'"
   },
   "dependencies": {
     "vuedraggable": "^2.24.3"

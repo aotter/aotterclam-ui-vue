@@ -1,3 +1,3 @@
 module.exports = {
-  projects: ['./packages/core', './packages/bootstrap']
+  projects: ['./packages/core', './packages/bootstrap', './examples/vue-cli']
 }

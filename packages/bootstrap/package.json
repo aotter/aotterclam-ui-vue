@@ -6,7 +6,8 @@
   "types": "dist/bootstrap.d.ts",
   "jsdelivr": "dist/bootstrap.global.js",
   "dependencies": {
-    "@aotter/aotterclam-ui-vue-core": "^0.1.0"
+    "@aotter/aotterclam-ui-vue-core": "^0.1.0",
+    "bootstrap": "^4.5.3"
   },
   "files": [
     "dist",
@@ -30,7 +31,6 @@
   "peerDependencies": {
     "vue": "^2.6.11",
     "@vue/composition-api": "^1.4.9",
-    "bootstrap": "^4.5.3",
     "vee-validate": "^3.4.3"
   }
 }
