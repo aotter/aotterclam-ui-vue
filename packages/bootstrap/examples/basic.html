@@ -49,11 +49,35 @@
 
     <!-- install vee-validate dependency -->
     <script>
-      // todo i18n
+      const {
+        ValidationObserver,
+        ValidationProvider,
+        Rules: rules,
+        extend,
+        localize
+      } = VeeValidate
+
+      // Register all rules
+      for (const [rule, validation] of Object.entries(rules)) {
+        extend(rule, {
+          ...validation
+        })
+      }
+
+      // Setting i18n
+      const localeUrl =
+        'https://cdnjs.cloudflare.com/ajax/libs/vee-validate/3.4.14/locale/zh_TW.json'
+
+      fetch(localeUrl)
+        .then(res => res.json())
+        .then(locale => {
+          localize('zh_TW', locale)
+        })
+        .catch(err => console.log(error))
 
       // Register the component globally.
-      Vue.component('ValidationObserver', VeeValidate.ValidationObserver)
-      Vue.component('ValidationProvider', VeeValidate.ValidationProvider)
+      Vue.component('ValidationObserver', ValidationObserver)
+      Vue.component('ValidationProvider', ValidationProvider)
     </script>
 
     <!-- Start running your app -->

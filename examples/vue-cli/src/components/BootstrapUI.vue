@@ -16,7 +16,12 @@
     <div class="container">
       <div class="row mt-5">
         <div class="col col-md-8 col-xs-12">
-          <clam-form class="foo" v-model="formData" :fields="fields">
+          <clam-form
+            class="foo"
+            v-model="formData"
+            :fields="fields"
+            :key="type"
+          >
           </clam-form>
         </div>
         <div class="col col-md-4 col-xs-12">{{ formData }}</div>
