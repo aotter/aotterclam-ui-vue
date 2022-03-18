@@ -25,9 +25,9 @@
           :disabled="determineDisabled(fieldDisabled)"
           @input="onInput($event, field)"
         />
-        <span v-else
-          >Missing fieldContentComponent for field {{ field.name }}</span
-        >
+        <span v-else>
+          Missing fieldContentComponent for field {{ field.name }}
+        </span>
       </Field>
     </template>
   </div>
@@ -55,7 +55,7 @@ export default defineComponent({
     fieldContentComponent: [String, Object, Function, Promise],
     value: {
       type: Object,
-      default: {}
+      default: () => ({})
     },
     fields: {
       type: Array

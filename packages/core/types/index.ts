@@ -12,15 +12,17 @@ export type ClamComponentType =
   | 'SELECT'
   | 'TEXTAREA'
   | string
-  | Function // to be put in :is attr of <component />
+  | (() => void) // to be put in :is attr of <component />
 
 export interface IBaseClamField {
   name: string
   component: ClamComponentType
   contentType: ClamFieldContentType
-  show?: boolean | ((data: any) => boolean)
-  readonly?: boolean | ((data: any) => boolean)
-  disabled?: boolean | ((data: any) => boolean)
+  show?: BaseClamFieldBoolean
+  readonly?: BaseClamFieldBoolean
+  disabled?: BaseClamFieldBoolean
   rules?: string // vee-validate rules
   fields?: any[] // fixme: anything that extends IBaseClamField can be put here
 }
+
+export type BaseClamFieldBoolean = boolean | ((data: any) => boolean)

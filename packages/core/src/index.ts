@@ -1,5 +1,5 @@
-import BaseForm from "./BaseForm.vue";
-import Field from "./Field.vue";
-import FieldSet from "./FieldSet.vue";
+import BaseForm from './BaseForm.vue'
+import Field from './Field.vue'
+import FieldSet from './FieldSet.vue'
 
-export { BaseForm, Field, FieldSet };
+export { BaseForm, Field, FieldSet }

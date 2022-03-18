@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, Data } from '@vue/composition-api'
-import { IBaseClamField } from '../types'
+import { IBaseClamField, BaseClamFieldBoolean } from '../types'
 
 export default defineComponent({
   props: {
@@ -34,14 +34,14 @@ export default defineComponent({
     },
     value: {
       type: Object as PropType<Data>,
-      default: {}
+      default: () => ({})
     },
     field: {
       type: Object as PropType<IBaseClamField>,
       required: true
     }
   },
-  setup(props, ctx) {
+  setup(props) {
     const fieldValue = computed(() => {
       return props.value && props.value[props.field.name]
         ? props.value[props.field.name]
@@ -54,7 +54,7 @@ export default defineComponent({
     const readonly = computed(() => determine(props.field.readonly))
     const disabled = computed(() => determine(props.field.disabled))
 
-    function determine(f: Function | boolean | undefined): boolean {
+    function determine(f: BaseClamFieldBoolean | undefined): boolean {
       return f instanceof Function ? f(props.value) || false : f ?? false
     }
 
