@@ -1,17 +1,30 @@
 {
   "compilerOptions": {
-    "declarationDir": "lib",
-    "target": "esnext",
+    "baseUrl": ".",
+    "outDir": "dist",
+    "sourceMap": false,
+    "target": "es2016",
     "module": "esnext",
-    "sourceMap": true,
     "declaration": true,
     "importHelpers": true,
     "strict": true,
-    "experimentalDecorators": true
+    "allowJs": false,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "removeComments": false,
+    "declarationMap": true,
+    "rootDir": ".",
+    "preserveSymlinks": true,
+    "paths": {
+      "@aotter/aotterclam-ui-vue-core": ["packages/core/src"],
+    }
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+    "packages/global.d.ts",
+    "packages/*/src",
   ]
 }
