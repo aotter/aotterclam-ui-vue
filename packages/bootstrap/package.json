@@ -1,0 +1,36 @@
+{
+  "name": "@aotter/aotterclam-ui-vue-bootstrap",
+  "version": "0.1.0",
+  "main": "index.js",
+  "module": "dist/bootstrap.esm.js",
+  "types": "dist/bootstrap.d.ts",
+  "jsdelivr": "dist/bootstrap.global.js",
+  "dependencies": {
+    "@aotter/aotterclam-ui-vue-core": "^0.1.0"
+  },
+  "files": [
+    "dist",
+    "index.js",
+    "index.mjs"
+  ],
+  "buildOptions": {
+    "name": "AotterClamUiBootstrap",
+    "formats": [
+      "cjs",
+      "esm",
+      "global"
+    ],
+    "enableNonBrowserBranches": true,
+    "globals": {
+      "vue": "Vue",
+      "@vue/composition-api": "VueCompositionAPI",
+      "@aotter/aotterclam-ui-vue-core": "AotterClamUiCore"
+    }
+  },
+  "peerDependencies": {
+    "@vue/composition-api": "^1.4.9",
+    "vue": "^2.6.11",
+    "bootstrap": "^4.5.3",
+    "vee-validate": "^3.4.3"
+  }
+}
