@@ -34,18 +34,13 @@ const relativeOutfile = relative(process.cwd(), outfile)
 // resolve externals
 // TODO this logic is largely duplicated from rollup.config.js
 let external = []
+
 if (!inlineDeps) {
-  // cjs & esm-bundler: external all deps
-  if (format === 'cjs' || format.includes('esm-bundler')) {
-    external = [
-      ...external,
-      ...Object.keys(pkg.dependencies || {}),
-      ...Object.keys(pkg.peerDependencies || {}),
-      'path',
-      'url',
-      'stream'
-    ]
-  }
+  external = [
+    ...external,
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {})
+  ]
 }
 
 build({
