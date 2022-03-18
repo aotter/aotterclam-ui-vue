@@ -83,9 +83,6 @@ async function main() {
   step('\nBuilding all packages...')
   if (!skipBuild && !isDryRun) {
     await run('pnpm', ['run', 'build', '--', '--release'])
-    // test generated dts files
-    step('\nVerifying type declarations...')
-    await run('pnpm', ['run', 'test-dts-only'])
   } else {
     console.log(`(skipped)`)
   }
@@ -156,8 +153,9 @@ function updateDeps(pkg, depType, version) {
   if (!deps) return
   Object.keys(deps).forEach(dep => {
     if (
-      dep === 'vue' ||
-      (dep.startsWith('@vue') && packages.includes(dep.replace(/^@vue\//, '')))
+      dep === 'aotter' ||
+      (dep.startsWith('@aotter') &&
+        packages.includes(dep.replace(/^@aotter\/aotterclam-ui-vue-/, '')))
     ) {
       console.log(
         chalk.yellow(`${pkg.name} -> ${depType} -> ${dep}@${version}`)
