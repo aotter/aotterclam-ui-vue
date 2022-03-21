@@ -1,12 +1,12 @@
 {
   "name": "@aotter/aotterclam-ui-vue-bootstrap",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "main": "index.js",
   "module": "dist/bootstrap.esm.js",
   "types": "dist/bootstrap.d.ts",
   "jsdelivr": "dist/bootstrap.global.js",
   "dependencies": {
-    "@aotter/aotterclam-ui-vue-core": "^0.1.0"
+    "@aotter/aotterclam-ui-vue-core": "1.2.0"
   },
   "files": [
     "dist",
@@ -26,6 +26,13 @@
       "@vue/composition-api": "VueCompositionAPI",
       "@aotter/aotterclam-ui-vue-core": "AotterClamUiCore"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aotter/aotterclam-ui-vue.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "peerDependencies": {
     "@vue/composition-api": "^1.4.9",

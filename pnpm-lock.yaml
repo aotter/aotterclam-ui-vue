@@ -90,7 +90,7 @@ importers:
 
   examples/vue-cli:
     specifiers:
-      '@aotter/aotterclam-ui-vue-bootstrap': workspace:^0.1.0
+      '@aotter/aotterclam-ui-vue-bootstrap': workspace:*
       '@typescript-eslint/eslint-plugin': ^5.4.0
       '@typescript-eslint/parser': ^5.4.0
       '@vue/cli-plugin-babel': ~5.0.0
@@ -135,7 +135,7 @@ importers:
 
   packages/bootstrap:
     specifiers:
-      '@aotter/aotterclam-ui-vue-core': ^0.1.0
+      '@aotter/aotterclam-ui-vue-core': 1.2.0
     dependencies:
       '@aotter/aotterclam-ui-vue-core': link:../core
 
